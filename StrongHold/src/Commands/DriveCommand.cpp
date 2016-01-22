@@ -1,0 +1,47 @@
+#include "DriveCommand.h"
+#include "../Logging.h"
+#include "../Robot.h"
+#include "../Subsystems/DriveSubsystem.h"
+
+DriveCommand::DriveCommand()
+{
+	// Use Requires() here to declare subsystem dependencies
+	Requires(Robot::driveSubsystem.get());
+}
+
+// Called just before this Command runs the first time
+void DriveCommand::Initialize()
+{
+
+}
+
+// Called repeatedly when this Command is scheduled to run
+void DriveCommand::Execute()
+{
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute Enter()");
+	//float x = Robot::oi->getJoystickX();
+	float y = Robot::oi->getJoystickY();
+	float twist = Robot::oi->getjoystickTwist();
+
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute() y=%f, twist=%f", y, twist);
+
+	Robot::driveSubsystem->ArcadeDrive(y,twist);
+}
+
+// Make this return true when this Command no longer needs to run execute()
+bool DriveCommand::IsFinished()
+{
+	return false;
+}
+
+// Called once after isFinished returns true
+void DriveCommand::End()
+{
+
+}
+
+// Called when another command which requires one or more of the same
+// subsystems is scheduled to run
+void DriveCommand::Interrupted()
+{
+}
