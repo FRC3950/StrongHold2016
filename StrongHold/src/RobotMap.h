@@ -2,6 +2,8 @@
 #define ROBOTMAP_H
 
 #include "WPILib.h"
+#include "AHRS.h"
+
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -29,6 +31,8 @@ public:
 	static std::shared_ptr<Talon> driveSubsystemTalon3;
 	static std::shared_ptr<Talon> driveSubsystemTalon4;
 	static std::shared_ptr<RobotDrive> driveSubsystemRobotDrive41;
+
+	static std::shared_ptr<AHRS> ahrs;
 
 	static void init();
 };

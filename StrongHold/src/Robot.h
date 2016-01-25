@@ -11,6 +11,7 @@
 #include <memory>
 #include "WPILIB.h"
 #include "OI.h"
+#include "AHRS.h"
 #include "Subsystems/DriveSubsystem.h"
 
 class Robot: public IterativeRobot {
@@ -31,7 +32,10 @@ public:
 	virtual void TestPeriodic();
 
 private:
+	void OutputNavxData();
+
 	std::unique_ptr<SendableChooser> chooser;
+	std::shared_ptr<AHRS> ahrs;
 };
 
 #endif /* SRC_ROBOT_H_ */
