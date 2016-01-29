@@ -26,11 +26,23 @@ class RobotMap {
 private:
 
 public:
-	static std::shared_ptr<Talon> driveSubsystemTalon1;
-	static std::shared_ptr<Talon> driveSubsystemTalon2;
-	static std::shared_ptr<Talon> driveSubsystemTalon3;
-	static std::shared_ptr<Talon> driveSubsystemTalon4;
+	static std::shared_ptr<Victor> driveSubsystemVictor1;
+	static std::shared_ptr<Victor> driveSubsystemVictor2;
+	static std::shared_ptr<Victor> driveSubsystemVictor3;
+	static std::shared_ptr<Victor> driveSubsystemVictor4;
 	static std::shared_ptr<RobotDrive> driveSubsystemRobotDrive41;
+	static std::shared_ptr<DoubleSolenoid> driveSubsystemShifterSolenoid;
+	static std::shared_ptr<DoubleSolenoid> driveSubsystemPowerTakeOffSolenoid;
+
+	static std::shared_ptr<Victor> intakeSubsystemRollerVictor;
+	static std::shared_ptr<Victor> intakeSubsystemManipulatorVictor;
+
+	static std::shared_ptr<Talon> shooterSubsystemShooterWheelTalon;
+	static std::shared_ptr<Talon> shooterSubsystemIndexerTalon;
+	static std::shared_ptr<Solenoid> shooterSubsystemShooterCoverSolenoid;
+
+	static std::shared_ptr<DoubleSolenoid> climberSubsystemSolenoid1;
+	static std::shared_ptr<DoubleSolenoid> climberSubsystemSolenoid2;
 
 	static std::shared_ptr<AHRS> ahrs;
 

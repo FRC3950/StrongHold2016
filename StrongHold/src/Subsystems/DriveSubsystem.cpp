@@ -16,10 +16,10 @@ namespace
 DriveSubsystem::DriveSubsystem() :
 		Subsystem("DriveSubsystem")
 {
-    talon1 = RobotMap::driveSubsystemTalon1;
-    talon2 = RobotMap::driveSubsystemTalon2;
-    talon3 = RobotMap::driveSubsystemTalon3;
-    talon4 = RobotMap::driveSubsystemTalon4;
+	victor1 = RobotMap::driveSubsystemVictor1;
+	victor2 = RobotMap::driveSubsystemVictor2;
+	victor3 = RobotMap::driveSubsystemVictor3;
+	victor4 = RobotMap::driveSubsystemVictor4;
     robotDrive41 = RobotMap::driveSubsystemRobotDrive41;
 
     robotDrive41->SetSafetyEnabled(true);
@@ -35,10 +35,6 @@ void DriveSubsystem::InitDefaultCommand()
 {
 	// Set the default command for a subsystem here.
 	SetDefaultCommand(new DriveCommand());
-//	talon1->SetControlMode(Talon::kPercentVbus);
-//	talon2->SetControlMode(Talon::kPercentVbus);
-//	talon3->SetControlMode(Talon::kPercentVbus);
-//	talon4->SetControlMode(Talon::kPercentVbus);
 }
 
 // Put methods for controlling this subsystem
@@ -46,10 +42,10 @@ void DriveSubsystem::InitDefaultCommand()
 void DriveSubsystem::EnableDriveSubsystem(){
 	bool enable = false;
 	float expiration = 1.0;
-	SetSafetyMode(*talon1, enable, expiration);
-	SetSafetyMode(*talon2, enable, expiration);
-	SetSafetyMode(*talon3, enable, expiration);
-	SetSafetyMode(*talon4, enable, expiration);
+//	SetSafetyMode(*victor1, enable, expiration);
+//	SetSafetyMode(*victor2, enable, expiration);
+//	SetSafetyMode(*victor3, enable, expiration);
+//	SetSafetyMode(*victor4, enable, expiration);
 	robotDrive41->SetSafetyEnabled(enable);
 
 	if (enable)
@@ -64,10 +60,10 @@ void DriveSubsystem::EnableDriveSubsystem(){
 	talon4->EnableControl();
 	*/
 
-	talon1->Set(0);
-	talon2->Set(0);
-	talon3->Set(0);
-	talon4->Set(0);
+	victor1->Set(0);
+	victor2->Set(0);
+	victor3->Set(0);
+	victor4->Set(0);
 }
 
 void DriveSubsystem::ArcadeDrive(float y, float twist) {
