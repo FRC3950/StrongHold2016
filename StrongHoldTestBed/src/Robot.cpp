@@ -5,10 +5,6 @@
 #include "Commands/ExampleCommand.h"
 #include "CommandBase.h"
 #include "Subsystems/DriveSubsystem.h"
-#include "Config/CsvConfigFileReader.h"
-#include "Config/ConfigInstanceMgr.h"
-
-static const std::string ConfigFileName = "/home/lvuser/RobotConfig.csv";
 
 std::shared_ptr<DriveSubsystem> Robot::driveSubsystem;
 std::unique_ptr<OI> Robot::oi;
@@ -27,7 +23,6 @@ void Robot::RobotInit()
 	logger->SetLoggingLevel(Logger::kTRACE);
 	logger->SetLoggingMask(DefaultLoggingMask);
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit::Entered");
-	ConfigInstanceMgr::getInstance(ConfigFileName, false);
 
 	try
 	{

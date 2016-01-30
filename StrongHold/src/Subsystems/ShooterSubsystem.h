@@ -10,17 +10,22 @@ public:
 	enum HoodState{
 			open,closed
 		};
-private:
-	// It's desirable that everything possible under private except
-	// for methods that implement subsystem capabilities
-	std::shared_ptr<Solenoid> hoodSolenoid;
-public:
-
 	ShooterSubsystem();
 	void InitDefaultCommand();
 	void ToggleHood();
 	void SetHoodState(HoodState hs);
 	HoodState GetHoodState();
+	void SetTargetSpeed(float rotsPerSec);
+	bool HasHitTargetSpeed();
+
+private:
+	// It's desirable that everything possible under private except
+	// for methods that implement subsystem capabilities
+	std::shared_ptr<Solenoid> hoodSolenoid;
+	std::shared_ptr<CANTalon> shooterMotor;
+	double targetCountsPerSec;
+	double lastCountsReadTime;
+	double lastCounts;
 };
 
 #endif

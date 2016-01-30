@@ -1,20 +1,17 @@
-#ifndef ClimberSubsystem_H
-#define ClimberSubsystem_H
+#ifndef EXAMPLE_SUBSYSTEM_H
+#define EXAMPLE_SUBSYSTEM_H
 
 #include "Commands/Subsystem.h"
 #include "WPILib.h"
 
-class ClimberSubsystem: public Subsystem
+class ExampleSubsystem: public Subsystem
 {
 private:
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities
-	std::shared_ptr<DoubleSolenoid> solenoid1;
-	std::shared_ptr<DoubleSolenoid> solenoid2;
 public:
-	ClimberSubsystem();
+	ExampleSubsystem();
 	void InitDefaultCommand();
-	void LaunchClimber();
 };
 
 #endif
