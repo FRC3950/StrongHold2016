@@ -36,6 +36,7 @@ public:
 
 	static std::shared_ptr<Victor> intakeSubsystemRollerVictor;
 	static std::shared_ptr<Victor> intakeSubsystemManipulatorVictor;
+	static std::shared_ptr<AnalogInput> intakeSubsystemPhotoSensor;
 
 	static std::shared_ptr<CANTalon> shooterSubsystemShooterWheelTalon;
 	static std::shared_ptr<Solenoid> shooterSubsystemShooterCoverSolenoid;

@@ -11,6 +11,7 @@ private:
 	// for methods that implement subsystem capabilities
 	std::shared_ptr<Victor> intakeMotor;
 	std::shared_ptr<Victor> manipulatorMotor;
+	std::shared_ptr<AnalogInput> photoSensor;
 
 public:
 	enum IntakeDirection {
@@ -18,9 +19,25 @@ public:
 		neutral,
 		in
 	};
+
+	enum ManipulatorPos {
+		up,
+		down,
+		intake
+	};
+
 	IntakeSubsystem();
 	void InitDefaultCommand();
-	void SetIntakeMotors(IntakeDirection id);
+	void SetIntakeMotors(IntakeDirection id, bool usePhotoSensor);
+	bool IsBallLoaded();
+
+	// For the operator to manually move the arm.
+	void MoveManipulator(float vertVelocity);
+
+	void SetManipulatorSeekPosition(ManipulatorPos pos);
+	bool hasManipulatorReachedPos();
+	void cancelManipulatorSeek();
+
 };
 
 #endif

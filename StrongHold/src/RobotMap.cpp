@@ -19,6 +19,7 @@ std::shared_ptr<DoubleSolenoid> RobotMap::driveSubsystemShifterSolenoid;
 std::shared_ptr<DoubleSolenoid> RobotMap::driveSubsystemPowerTakeOffSolenoid;
 std::shared_ptr<Victor> RobotMap::intakeSubsystemRollerVictor;
 std::shared_ptr<Victor> RobotMap::intakeSubsystemManipulatorVictor;
+std::shared_ptr<AnalogInput> RobotMap::intakeSubsystemPhotoSensor;
 std::shared_ptr<CANTalon> RobotMap::shooterSubsystemShooterWheelTalon;
 std::shared_ptr<CANTalon> RobotMap::uptakeSubsystemIndexerTalon;
 std::shared_ptr<Solenoid> RobotMap::shooterSubsystemShooterCoverSolenoid;

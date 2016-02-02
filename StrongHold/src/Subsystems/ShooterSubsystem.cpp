@@ -1,9 +1,22 @@
 #include "ShooterSubsystem.h"
 #include "../RobotMap.h"
-
+#include "../Logging.h"
+#include "../ConfigKeys.h"
+#include "../Config/ConfigInstanceMgr.h"
 
 namespace {
 	const float CONVERSION_RATIO_ROTATIONS_TO_COUNTS = 512;
+
+	const double SHOOTER_VOLTAGE_DEFAULT = 0.01;
+
+	const double SHOOTER_ROTS_PER_SEC_EPSILON_DEFAULT = 10.0;
+	double ShooterRotsPerSecEpsilon = SHOOTER_ROTS_PER_SEC_EPSILON_DEFAULT;
+
+	const double CLIMBER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT = .10;
+	double ShooterMotorSmallErrorSmoothingFactor = CLIMBER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT;
+
+	const double CLIMBER_MOTOR_LARGE_ERROR_SMOOTHING_FACTOR_DEFAULT = .50;
+	double ShooterMotorLargeErrorSmoothingFactor = CLIMBER_MOTOR_LARGE_ERROR_SMOOTHING_FACTOR_DEFAULT;
 
 	inline double ConvertRotationstoCounts(double rotations) {
 		return rotations * CONVERSION_RATIO_ROTATIONS_TO_COUNTS;
@@ -24,7 +37,31 @@ namespace {
 
 		return delta;
 	}
+
+	bool ConfigInited = false;
+
+	void InitSubsystemConfiguration()
+	{
+	    ConfigMgr *configMgr = ConfigInstanceMgr::getInstance();
+
+	    if (!ConfigInited) {
+	    	ShooterRotsPerSecEpsilon = configMgr->getDoubleVal(ConfigKeys::Shooter_RotsPerSecEpsilonKey, SHOOTER_ROTS_PER_SEC_EPSILON_DEFAULT);
+
+	    	ShooterMotorLargeErrorSmoothingFactor = configMgr->getDoubleVal(ConfigKeys::Shooter_LargeErrorSmoothingFactorKey, CLIMBER_MOTOR_LARGE_ERROR_SMOOTHING_FACTOR_DEFAULT);
+	    	ShooterMotorSmallErrorSmoothingFactor = configMgr->getDoubleVal(ConfigKeys::Shooter_SmallErrorSmoothingFactorKey, CLIMBER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT);
+
+
+			Logger* logger = Logger::GetInstance();
+
+			logger->Log(ShooterSubsystemLogId,Logger::kINFO, "ShooterSubsystem: Rotations / Sec Epsilon = %g\n", ShooterRotsPerSecEpsilon);
+			logger->Log(ShooterSubsystemLogId,Logger::kINFO, "ShooterSubsystem: Small Error Smoothing Factor = %g\n", ShooterMotorSmallErrorSmoothingFactor);
+			logger->Log(ShooterSubsystemLogId,Logger::kINFO, "ShooterSubsystem: Large Error Smoothing Factor = %g\n", ShooterMotorLargeErrorSmoothingFactor);
+
+	      	ConfigInited = true;
+	    }
+	}
 }
+
 ShooterSubsystem::ShooterSubsystem() :
 		Subsystem("ExampleSubsystem")
 {
@@ -40,6 +77,7 @@ ShooterSubsystem::ShooterSubsystem() :
 	lastCountsReadTime = 0.0f;
 	lastCounts = 0.0f;
 
+	InitSubsystemConfiguration();
 }
 
 void ShooterSubsystem::InitDefaultCommand()
@@ -72,7 +110,6 @@ ShooterSubsystem::HoodState ShooterSubsystem::GetHoodState(){
 	return hoodSolenoid->Get() == true ? HoodState::open : HoodState::closed;
 }
 
-const double SHOOTER_VOLTAGE_DEFAULT = 0.01;
 
 void ShooterSubsystem::SetTargetSpeed(float rotsPerSec){
 	if (rotsPerSec <= 0) {
@@ -87,6 +124,7 @@ void ShooterSubsystem::SetTargetSpeed(float rotsPerSec){
 
 	shooterMotor->Set(SHOOTER_VOLTAGE_DEFAULT);
 }
+
 
 bool ShooterSubsystem::HasHitTargetSpeed() {
 	double currTime = Timer::GetFPGATimestamp();
@@ -106,17 +144,22 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 		return true;
 	}
 
-	double delta = DeltaFromSpeedTarget(currSpeed, targetCountsPerSec, 10);
-
 	double ratio = currSpeed / targetCountsPerSec;
 
-	double accelFactor = 1.0 - ratio;
+	double error = 1.0 - ratio;
 
 	double voltage = shooterMotor->Get();
 
-	const double AccelerationScaleValue = .10;
+	double smoothingFactor;
 
-	voltage += accelFactor * AccelerationScaleValue;
+	if (error >= 0.5) {
+		smoothingFactor = ShooterMotorLargeErrorSmoothingFactor;
+	}
+	else {
+		smoothingFactor = ShooterMotorSmallErrorSmoothingFactor;
+	}
+
+	voltage += error * smoothingFactor;
 
 	if (voltage > 1.0) {
 		voltage = 1.0;
