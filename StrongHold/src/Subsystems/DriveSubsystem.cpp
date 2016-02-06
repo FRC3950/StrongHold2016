@@ -115,7 +115,6 @@ void DriveSubsystem::ArcadeDrive(float y, float twist) {
 }
 
 void DriveSubsystem::Climb(float y) {
-	// Hello I must be going.
 	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveSubsystem::Climb()->y = %f", y);
 
 	if (!inClimbMode())
