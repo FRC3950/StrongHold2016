@@ -1,3 +1,4 @@
+#include "../Robot.h"
 #include "ExampleCommand.h"
 
 ExampleCommand::ExampleCommand()

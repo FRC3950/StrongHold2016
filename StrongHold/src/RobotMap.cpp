@@ -23,9 +23,10 @@ std::shared_ptr<AnalogInput> RobotMap::intakeSubsystemPhotoSensor;
 std::shared_ptr<CANTalon> RobotMap::shooterSubsystemShooterWheelTalon;
 std::shared_ptr<CANTalon> RobotMap::uptakeSubsystemIndexerTalon;
 std::shared_ptr<Solenoid> RobotMap::shooterSubsystemShooterCoverSolenoid;
-std::shared_ptr<DoubleSolenoid> RobotMap::climberSubsystemSolenoid1;
-std::shared_ptr<DoubleSolenoid> RobotMap::climberSubsystemSolenoid2;
+std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid1;
+std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid2;
 std::shared_ptr<AHRS> RobotMap::ahrs;
+std::shared_ptr<PowerDistributionPanel> RobotMap::pdp;
 
 
 void RobotMap::init(){
@@ -60,9 +61,11 @@ void RobotMap::init(){
 
     shooterSubsystemShooterCoverSolenoid.reset(new Solenoid(2));
 
-	climberSubsystemSolenoid1.reset(new DoubleSolenoid(4, 5));
+	climberSubsystemSolenoid1.reset(new Solenoid(4, 5));
 
-	climberSubsystemSolenoid2.reset(new DoubleSolenoid(6, 7));
+	climberSubsystemSolenoid2.reset(new Solenoid(6, 7));
+
+	pdp.reset(new PowerDistributionPanel(0));
 
 
     /* Communicate w/navX MXP via the MXP SPI Bus.                                       */

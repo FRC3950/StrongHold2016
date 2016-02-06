@@ -26,6 +26,7 @@ public:
 	void SetGear(Gear g);
 	Gear GetGearState();
 	void SetMode(DriveMode dm);
+	float inRangeExclusive(float val, float range);
 
 	DriveMode GetMode() const {
 		return mode;
@@ -48,7 +49,7 @@ private:
 	std::shared_ptr<Victor> victor2;
 	std::shared_ptr<Victor> victor3;
 	std::shared_ptr<Victor> victor4;
-	std::shared_ptr<RobotDrive> robotDrive41;
+	std::shared_ptr<RobotDrive> robotDrive;
 	std::shared_ptr<DoubleSolenoid> powerTakeOffSolenoid;
 	std::shared_ptr<DoubleSolenoid> gearSwitchSolenoid;
 

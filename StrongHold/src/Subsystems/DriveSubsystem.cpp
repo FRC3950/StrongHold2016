@@ -9,6 +9,8 @@ namespace
 {
 	const bool DRIVE_SAFETY_ENABLED_DEFAULT = false;
 	const float DRIVE_SAFETY_TIME_OUT_DEFAULT = 1.0;
+	const float Y_VAL_EPSILON_RANGE = .05;
+	const float TWIST_VAL_EPSILON_RANGE = .05;
 
 #if 0
 	void SetSafetyMode(Talon& motor, bool enabled, float timeout) {
@@ -35,17 +37,17 @@ DriveSubsystem::DriveSubsystem() :
 	victor2 = RobotMap::driveSubsystemVictor2;
 	victor3 = RobotMap::driveSubsystemVictor3;
 	victor4 = RobotMap::driveSubsystemVictor4;
-    robotDrive41 = RobotMap::driveSubsystemRobotDrive41;
+    robotDrive = RobotMap::driveSubsystemRobotDrive41;
     powerTakeOffSolenoid = RobotMap::driveSubsystemPowerTakeOffSolenoid;
     gearSwitchSolenoid = RobotMap::driveSubsystemShifterSolenoid;
 
-    robotDrive41->SetSafetyEnabled(true);
-    robotDrive41->SetExpiration(0.1);
-    robotDrive41->SetSensitivity(0.5);
-    robotDrive41->SetMaxOutput(1.0);
+    robotDrive->SetSafetyEnabled(true);
+    robotDrive->SetExpiration(0.1);
+    robotDrive->SetSensitivity(0.5);
+    robotDrive->SetMaxOutput(1.0);
 
-    robotDrive41->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
-    robotDrive41->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
+    robotDrive->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
+    robotDrive->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
 
     syncDriveModeToHardware();
 }
@@ -78,11 +80,11 @@ void DriveSubsystem::EnableDriveSubsystem() {
 	VictorSetSafetyMode(*victor2, enable, expiration);
 	VictorSetSafetyMode(*victor3, enable, expiration);
 	VictorSetSafetyMode(*victor4, enable, expiration);
-	robotDrive41->SetSafetyEnabled(enable);
+	robotDrive->SetSafetyEnabled(enable);
 
 	if (enable)
 	{
-		robotDrive41->SetSafetyEnabled(expiration);
+		robotDrive->SetSafetyEnabled(expiration);
 	}
 
     syncDriveModeToHardware();
@@ -109,7 +111,7 @@ void DriveSubsystem::ArcadeDrive(float y, float twist) {
 		return;
 	}
 
-	robotDrive41->ArcadeDrive(twist,y);
+	robotDrive->ArcadeDrive(inRangeExclusive(twist, TWIST_VAL_EPSILON_RANGE),inRangeExclusive(y, Y_VAL_EPSILON_RANGE));
 }
 
 void DriveSubsystem::Climb(float y) {
@@ -168,5 +170,11 @@ void DriveSubsystem::SetMode(DriveSubsystem::DriveMode dm) {
 		powerTakeOffSolenoid->Set(DoubleSolenoid::Value::kReverse);
 		mode = DriveMode::climb;
 	}
+}
+float DriveSubsystem::inRangeExclusive(float val, float range){
+	if (val < range && val > -range){
+		return 0;
+	}
+	return val;
 }
 

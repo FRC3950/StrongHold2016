@@ -18,5 +18,6 @@ void ClimberSubsystem::InitDefaultCommand()
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
 void ClimberSubsystem::LaunchClimber(){
-
+	solenoid1->Set(false);
+	solenoid2->Set(false);
 }

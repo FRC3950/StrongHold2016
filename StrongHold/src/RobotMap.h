@@ -43,10 +43,12 @@ public:
 
 	static std::shared_ptr<CANTalon> uptakeSubsystemIndexerTalon;
 
-	static std::shared_ptr<DoubleSolenoid> climberSubsystemSolenoid1;
-	static std::shared_ptr<DoubleSolenoid> climberSubsystemSolenoid2;
+	static std::shared_ptr<Solenoid> climberSubsystemSolenoid1;
+	static std::shared_ptr<Solenoid> climberSubsystemSolenoid2;
 
 	static std::shared_ptr<AHRS> ahrs;
+
+	static std::shared_ptr<PowerDistributionPanel> pdp;
 
 	static void init();
 };

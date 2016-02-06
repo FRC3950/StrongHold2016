@@ -4,14 +4,18 @@
 #include "Commands/Command.h"
 #include "Commands/ExampleCommand.h"
 #include "CommandBase.h"
-#include "Subsystems/DriveSubsystem.h"
 #include "Config/CsvConfigFileReader.h"
 #include "Config/ConfigInstanceMgr.h"
+
 
 static const std::string ConfigFileName = "/home/lvuser/RobotConfig.csv";
 
 std::shared_ptr<DriveSubsystem> Robot::driveSubsystem;
+std::shared_ptr<IntakeSubsystem> Robot::intakeSubsystem;
+std::shared_ptr<ClimberSubsystem> Robot::climberSubsystem;
+std::shared_ptr<PowerDistributionPanel> Robot::pdp;
 std::unique_ptr<OI> Robot::oi;
+
 
 namespace
 {
@@ -19,8 +23,23 @@ namespace
 
 	const std::string IMUStr = "IMU";
 	const std::string GyroStr = "Gyro";
+	const double DriveVictorMaxCurrent = 12.0;
+
+	enum DriveMotorVictor {
+		FrontLeftVictor = 0,
+		FrontRightVictor,
+		BackLeftVictor,
+		BackRightVictor
+	};
 }
 
+DriveMotorCurrents Robot::getDriveMotorCurrents(){
+	return DriveMotorCurrents(
+			pdp->GetCurrent(FrontLeftVictor),
+			pdp->GetCurrent(FrontRightVictor),
+			pdp->GetCurrent(BackLeftVictor),
+			pdp->GetCurrent(BackRightVictor));
+}
 void Robot::RobotInit()
 {
 	Logger *logger = Logger::GetInstance(true, true);
@@ -43,6 +62,9 @@ void Robot::RobotInit()
 
 	CommandBase::init();
 	driveSubsystem.reset(new DriveSubsystem());
+	intakeSubsystem.reset(new IntakeSubsystem());
+	climberSubsystem.reset(new ClimberSubsystem());
+
 
 	// This MUST be here. If the OI creates Commands (which it very likely
 	// will), constructing it during the construction of CommandBase (from
@@ -120,6 +142,7 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
 	OutputNavxData();
+	OutputMotorCurrents();
 	Scheduler::GetInstance()->Run();
 }
 
@@ -128,6 +151,25 @@ void Robot::TestPeriodic()
 	LiveWindow::GetInstance()->Run();
 }
 
+void Robot::OutputMotorCurrents()
+{
+	DriveMotorCurrents currents = getDriveMotorCurrents();
+
+	SmartDashboard::PutNumber(  "Front Left Drive Motor", currents.getCurrent(DriveMotorCurrents::frontLeft));
+	SmartDashboard::PutNumber(  "Front Right Drive Motor", currents.getCurrent(DriveMotorCurrents::frontRight));
+	SmartDashboard::PutNumber(  "Back Left Drive Motor", currents.getCurrent(DriveMotorCurrents::backLeft));
+	SmartDashboard::PutNumber(  "Back Right Drive Motor", currents.getCurrent(DriveMotorCurrents::backRight));
+
+	bool goodCurrent = true;
+	if (currents.getCurrent(DriveMotorCurrents::frontLeft) > DriveVictorMaxCurrent ||
+			currents.getCurrent(DriveMotorCurrents::frontRight) > DriveVictorMaxCurrent ||
+			currents.getCurrent(DriveMotorCurrents::backLeft) > DriveVictorMaxCurrent||
+			currents.getCurrent(DriveMotorCurrents::backRight) > DriveVictorMaxCurrent){
+		goodCurrent = false;
+
+	}
+	SmartDashboard::PutString("Drive Motor Current", goodCurrent ? "NORMAL" : "OVERLOADED");
+}
 void Robot::OutputNavxData()
 {
 	 if ( !ahrs ) return;

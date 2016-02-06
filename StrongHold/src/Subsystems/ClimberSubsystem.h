@@ -9,8 +9,8 @@ class ClimberSubsystem: public Subsystem
 private:
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities
-	std::shared_ptr<DoubleSolenoid> solenoid1;
-	std::shared_ptr<DoubleSolenoid> solenoid2;
+	std::shared_ptr<Solenoid> solenoid1;
+	std::shared_ptr<Solenoid> solenoid2;
 public:
 	ClimberSubsystem();
 	void InitDefaultCommand();
