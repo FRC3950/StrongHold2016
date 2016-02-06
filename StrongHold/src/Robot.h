@@ -28,6 +28,7 @@ public:
 	static std::shared_ptr<DriveSubsystem> driveSubsystem;
 	static std::shared_ptr<IntakeSubsystem> intakeSubsystem;
 	static std::shared_ptr<ClimberSubsystem> climberSubsystem;
+	static std::shared_ptr<ShooterSubsystem> shooterSubsystem;
 	static std::shared_ptr<PowerDistributionPanel> pdp;
 
 	static DriveMotorCurrents getDriveMotorCurrents();

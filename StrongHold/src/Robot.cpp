@@ -13,6 +13,7 @@ static const std::string ConfigFileName = "/home/lvuser/RobotConfig.csv";
 std::shared_ptr<DriveSubsystem> Robot::driveSubsystem;
 std::shared_ptr<IntakeSubsystem> Robot::intakeSubsystem;
 std::shared_ptr<ClimberSubsystem> Robot::climberSubsystem;
+std::shared_ptr<ShooterSubsystem> Robot::shooterSubsystem;
 std::shared_ptr<PowerDistributionPanel> Robot::pdp;
 std::unique_ptr<OI> Robot::oi;
 
@@ -64,6 +65,7 @@ void Robot::RobotInit()
 	driveSubsystem.reset(new DriveSubsystem());
 	intakeSubsystem.reset(new IntakeSubsystem());
 	climberSubsystem.reset(new ClimberSubsystem());
+	shooterSubsystem.reset(new ShooterSubsystem());
 
 
 	// This MUST be here. If the OI creates Commands (which it very likely

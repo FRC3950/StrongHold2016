@@ -26,6 +26,8 @@ public:
     
     int getIntVal(const std::string &itemName, int defaultValue) const;
     
+    float getFloatVal(const std::string &itemName, float defaultValue) const;
+
     double getDoubleVal(const std::string &itemName, double defaultValue) const;
     
     const std::string &getStringVal(const std::string &itemName, const std::string &defaultValue);

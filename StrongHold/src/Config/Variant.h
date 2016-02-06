@@ -50,7 +50,7 @@ public:
     {
         None,       // Variant isn't storing anything.
         Bool,       // Variant is storing a boolean.
-        Int,        // Variant is storing an int.
+        Int,        // Variant is storing an integer.
         Double,     // Variant is storing a double.
         String      // Variant is storing a string.
     };
@@ -71,12 +71,14 @@ public:
     
     void setValue(bool value);
     void setValue(int value);
+    void setValue(float value);
     void setValue(double value);
     void setValue(const std::string &value);
     
     bool getBool() const;
     int getInt() const;
     double getDouble() const;
+    float getFloat() const;
     const std::string &getString() const;
     
     bool operator==(const Variant &o) const;
@@ -88,6 +90,7 @@ private:
     union {
         bool boolValue;
         int intValue;
+        float floatValue;
         double doubleValue;
     };
     

@@ -94,4 +94,5 @@ namespace ConfigKeys
 
 	const std::string Shooter_LargeErrorSmoothingFactorKey = "Shooter_LargeErrorSmoothingFactorKey";
 
+	const std::string Shooter_WheelsRotsPerSecKey = "Shooter_WheelsRosPerSecKey";
 }

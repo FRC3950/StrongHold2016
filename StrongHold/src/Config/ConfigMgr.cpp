@@ -40,7 +40,7 @@ namespace
         
         return defaultValue;
     }
-    
+
     double getValueOrDefault(const Variant &variant, double defaultValue)
     {
         if (variant.getType() != Variant::None)
@@ -147,6 +147,11 @@ ConfigMgr::ConfigMgr(ConfigFileReader &configFileReader)
 int ConfigMgr::getIntVal(const std::string &itemName, int defaultValue) const
 {
     return getValue(itemName, configMap, defaultValue);
+}
+
+float ConfigMgr::getFloatVal(const std::string &itemName, float defaultValue) const
+{
+	return static_cast<float>(getDoubleVal(itemName, defaultValue));
 }
 
 double ConfigMgr::getDoubleVal(const std::string &itemName, double defaultValue) const

@@ -124,6 +124,8 @@ void DriveSubsystem::Climb(float y) {
 	}
 
 	//TO DO: climb code
+	robotDrive->ArcadeDrive(0,inRangeExclusive(y, Y_VAL_EPSILON_RANGE));
+
 }
 
 void DriveSubsystem::ToggleHighLowGear(){

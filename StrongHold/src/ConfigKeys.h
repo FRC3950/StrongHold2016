@@ -66,6 +66,7 @@ namespace ConfigKeys
 	extern const std::string Drive_AutoDriveMinSlowDownSpeedPercentageKey;
 
 	// Shooting Subsystem Keys
+	extern const std::string Shooter_WheelsRotsPerSecKey;
 	extern const std::string Shooter_RotsPerSecEpsilonKey;
 	extern const std::string Shooter_SmallErrorSmoothingFactorKey;
 	extern const std::string Shooter_LargeErrorSmoothingFactorKey;

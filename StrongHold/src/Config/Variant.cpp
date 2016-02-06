@@ -156,6 +156,11 @@ void Variant::setValue(double value)
     valueType = Double;
 }
 
+void Variant::setValue(float value)
+{
+	setValue(static_cast<double>(value));
+}
+
 void Variant::setValue(const std::string &value)
 {
     strValue = value;
@@ -181,6 +186,11 @@ double Variant::getDouble() const
     throwIfTypeMismatch(Variant::Double, valueType);
     
     return doubleValue;
+}
+
+float Variant::getFloat() const
+{
+	return static_cast<float>(getDouble());
 }
 
 const std::string & Variant::getString() const
