@@ -6,37 +6,46 @@
 
 class IntakeSubsystem: public Subsystem
 {
-private:
-	// It's desirable that everything possible under private except
-	// for methods that implement subsystem capabilities
-	std::shared_ptr<Victor> intakeMotor;
-	std::shared_ptr<Victor> manipulatorMotor;
-	std::shared_ptr<AnalogInput> photoSensor;
-
 public:
 	enum IntakeDirection {
-		out,
-		neutral,
-		in
+		Out,
+		Neutral,
+		In
 	};
 
-	enum ManipulatorPos {
-		up,
-		down,
-		intake
+	enum SeekManipulatorPos {
+		None,
+		Up,
+		Intake,
+		Down
 	};
 
 	IntakeSubsystem();
 	void InitDefaultCommand();
-	void SetIntakeMotors(IntakeDirection id, bool usePhotoSensor);
+	void findHomePosition(bool forceFind);
+
+	void SetIntakeMotor(IntakeDirection id, bool usePhotoSensor);
 	bool IsBallLoaded();
 
 	// For the operator to manually move the arm.
 	void MoveManipulator(float vertVelocity);
 
-	void SetManipulatorSeekPosition(ManipulatorPos pos);
+	bool SetManipulatorSeekPosition(SeekManipulatorPos pos);
 	bool hasManipulatorReachedPos();
 	void cancelManipulatorSeek();
+
+private:
+	bool CheckUpperLimitSwitch();
+
+	// It's desirable that everything possible under private except
+	// for methods that implement subsystem capabilities
+	std::shared_ptr<Victor> intakeMotor;
+	std::shared_ptr<CANTalon> manipulatorMotor;
+	std::shared_ptr<AnalogInput> photoSensor;
+	std::shared_ptr<DigitalInput> upperLimitSwitch;
+	bool homePositionSet = false;
+	SeekManipulatorPos seekPos = None;
+	double manipMotorCountTarget = 0.0;
 
 };
 

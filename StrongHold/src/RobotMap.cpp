@@ -18,7 +18,8 @@ std::shared_ptr<RobotDrive> RobotMap::driveSubsystemRobotDrive41;
 std::shared_ptr<DoubleSolenoid> RobotMap::driveSubsystemShifterSolenoid;
 std::shared_ptr<DoubleSolenoid> RobotMap::driveSubsystemPowerTakeOffSolenoid;
 std::shared_ptr<Victor> RobotMap::intakeSubsystemRollerVictor;
-std::shared_ptr<Victor> RobotMap::intakeSubsystemManipulatorVictor;
+std::shared_ptr<CANTalon> RobotMap::intakeSubsystemManipulatorMotor;
+std::shared_ptr<DigitalInput> RobotMap::intakeSubsystemUpperLimitSwitch;
 std::shared_ptr<AnalogInput> RobotMap::intakeSubsystemPhotoSensor;
 std::shared_ptr<CANTalon> RobotMap::shooterSubsystemShooterWheelTalon;
 std::shared_ptr<CANTalon> RobotMap::uptakeSubsystemIndexerTalon;
@@ -53,7 +54,9 @@ void RobotMap::init(){
 
     intakeSubsystemRollerVictor.reset(new Victor(4));
 
-    intakeSubsystemManipulatorVictor.reset(new Victor(5));
+    intakeSubsystemManipulatorMotor.reset(new CANTalon(5));
+
+    intakeSubsystemUpperLimitSwitch.reset(new DigitalInput(0));
 
     shooterSubsystemShooterWheelTalon.reset(new CANTalon(0));
 
