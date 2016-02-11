@@ -33,6 +33,7 @@ std::shared_ptr<PowerDistributionPanel> RobotMap::pdp;
 void RobotMap::init(){
     LiveWindow *lw = LiveWindow::GetInstance();
 
+#if NOT_YET
     driveSubsystemVictor1.reset(new Victor(0));
     lw->AddActuator("DriveSubsystem", "Victor 1", driveSubsystemVictor1);
 
@@ -58,15 +59,19 @@ void RobotMap::init(){
 
     intakeSubsystemUpperLimitSwitch.reset(new DigitalInput(0));
 
-    shooterSubsystemShooterWheelTalon.reset(new CANTalon(0));
-
     uptakeSubsystemIndexerTalon.reset(new CANTalon(1));
-
-    shooterSubsystemShooterCoverSolenoid.reset(new Solenoid(2));
 
 	climberSubsystemSolenoid1.reset(new Solenoid(4, 5));
 
 	climberSubsystemSolenoid2.reset(new Solenoid(6, 7));
+
+    shooterSubsystemShooterCoverSolenoid.reset(new Solenoid(2));
+
+
+#endif
+
+    shooterSubsystemShooterWheelTalon.reset(new CANTalon(0));
+
 
 	pdp.reset(new PowerDistributionPanel(0));
 

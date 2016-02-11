@@ -112,21 +112,33 @@ ShooterSubsystem::HoodState ShooterSubsystem::GetHoodState(){
 
 
 void ShooterSubsystem::SetTargetSpeed(float rotsPerSec){
+	Logger *logger = Logger::GetInstance();
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "SetTargetSpeed Entered");
+
 	if (rotsPerSec <= 0) {
 		// Error TBD
 		shooterMotor->Set(0.0);
 		return;
 	}
 
+	shooterMotor->SetPosition(0.0);
+
 	targetCountsPerSec = ConvertRotationstoCounts(rotsPerSec);
 	lastCountsReadTime = Timer::GetFPGATimestamp();
-	lastCounts = fabs(shooterMotor->GetPosition());
-
+	lastCounts = 0.0;//fabs(shooterMotor->GetPosition());
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Target Counts per second: %f", targetCountsPerSec);
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "last count read time: %g", lastCountsReadTime);
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "last counts read: %g", lastCounts);
 	shooterMotor->Set(SHOOTER_VOLTAGE_DEFAULT);
+
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "SetTargetSpeed Exit");
 }
 
 
 bool ShooterSubsystem::HasHitTargetSpeed() {
+	Logger *logger = Logger::GetInstance();
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "HasHitTargetSpeed Entered");
+
 	double currTime = Timer::GetFPGATimestamp();
 	double currCounts = fabs(shooterMotor->GetPosition());
 
@@ -134,13 +146,22 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 	if ((currTime < lastCountsReadTime) || (currCounts < lastCounts)) {
 		lastCountsReadTime = currTime;
 		lastCounts = currCounts;
+		logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Time or Counts has rolled over.  Resetting lastCountsReadTime=%g, lastCounts=%g",
+					lastCountsReadTime, lastCounts);
+		logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "HasHitTargetSpeed Exit, Returning False");
 		return false;
 	}
 
 	double currSpeed = (currCounts - lastCounts) / (currTime - lastCountsReadTime);
 
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "currSpeed=%g, currCounts=%g, lastCounts=%g, currTime=%g, lastCountsReadTime=%g",
+			    currSpeed, currCounts, lastCounts, currTime, lastCountsReadTime);
+
 	if (InRange(currSpeed, targetCountsPerSec, 10))
 	{
+		logger->Log(ShooterSubsystemLogId, Logger::kINFO, "Hit Target Speed: currSpeed=%g, targetCountsPerSec=%g, Returning True.",
+				    currSpeed, targetCountsPerSec);
+
 		return true;
 	}
 
@@ -159,7 +180,13 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 		smoothingFactor = ShooterMotorSmallErrorSmoothingFactor;
 	}
 
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Ratio=%g, Error=%g, voltage=%g, smoothingFactor=%g",
+			    ratio, error, voltage, smoothingFactor);
+
 	voltage += error * smoothingFactor;
+
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "New Voltage = %g",
+			    voltage);
 
 	if (voltage > 1.0) {
 		voltage = 1.0;
@@ -168,10 +195,15 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 		voltage = -1.0;
 	}
 
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "New Voltage After Capping = %g",
+			    voltage);
+
 	shooterMotor->Set(voltage);
 
 	lastCounts = currCounts;
 	lastCountsReadTime = currTime;
+
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "HasHitTargetSpeed Exit -> Returning false");
 
 	return false;
 }

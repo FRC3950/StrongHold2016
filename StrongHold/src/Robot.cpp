@@ -52,21 +52,30 @@ void Robot::RobotInit()
 	try
 	{
 		RobotMap::init();
+		logger->Log(RobotLogId, Logger::kTRACE, "RobotInit::RobotMap::init() complete");
 	}
 	catch (std::exception& ex ) {
 		std::string err_string = "Error initializing RobotMap:  ";
 		err_string += ex.what();
+		logger->Log(RobotLogId, Logger::kERROR, "RobotInit::RobotMap::init() failed with error %s", ex.what());
 		DriverStation::ReportError(err_string.c_str());
 	}
 
 	ahrs = RobotMap::ahrs;
 
 	CommandBase::init();
+
+#if NOT_YET
 	driveSubsystem.reset(new DriveSubsystem());
 	intakeSubsystem.reset(new IntakeSubsystem());
 	climberSubsystem.reset(new ClimberSubsystem());
+#endif
+
+	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: Before Shooter Subsystem create");
+
 	shooterSubsystem.reset(new ShooterSubsystem());
 
+	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: After Shooter Subsystem create");
 
 	// This MUST be here. If the OI creates Commands (which it very likely
 	// will), constructing it during the construction of CommandBase (from
@@ -75,6 +84,7 @@ void Robot::RobotInit()
 	// news. Don't move it.
 	oi.reset(new OI());
 
+	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: Created OI");
 
 	chooser.reset(new SendableChooser());
 	chooser->AddDefault(DefaultAutoStr, new ExampleCommand());
@@ -85,6 +95,9 @@ void Robot::RobotInit()
 	if (ahrs) {
 		LiveWindow::GetInstance()->AddSensor(IMUStr, GyroStr, ahrs);
 	}
+
+	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: Exiting");
+
 }
 
 /**
@@ -144,7 +157,7 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
 	OutputNavxData();
-	OutputMotorCurrents();
+//	OutputMotorCurrents();
 	Scheduler::GetInstance()->Run();
 }
 
@@ -155,6 +168,10 @@ void Robot::TestPeriodic()
 
 void Robot::OutputMotorCurrents()
 {
+	Logger *logger = Logger::GetInstance();
+
+	logger->Log(RobotLogId, Logger::kTRACE, "OutputMotorCurrents:: Entered");
+
 	DriveMotorCurrents currents = getDriveMotorCurrents();
 
 	SmartDashboard::PutNumber(  "Front Left Drive Motor", currents.getCurrent(DriveMotorCurrents::frontLeft));
@@ -171,10 +188,19 @@ void Robot::OutputMotorCurrents()
 
 	}
 	SmartDashboard::PutString("Drive Motor Current", goodCurrent ? "NORMAL" : "OVERLOADED");
+
+	logger->Log(RobotLogId, Logger::kTRACE, "OutputMotorCurrents:: Exit");
 }
 void Robot::OutputNavxData()
 {
-	 if ( !ahrs ) return;
+	Logger *logger = Logger::GetInstance();
+
+//	logger->Log(RobotLogId, Logger::kTRACE, "OutputNavxData:: Entered");
+
+	 if ( !ahrs ) {
+		 logger->Log(RobotLogId, Logger::kTRACE, "OutputNavxData:: ahrs doesn't exist.  Exiting!");
+		 return;
+	 }
 
 	bool reset_yaw_button_pressed = DriverStation::GetInstance().GetStickButton(0,1);
 	if ( reset_yaw_button_pressed ) {
@@ -237,6 +263,8 @@ void Robot::OutputNavxData()
 	SmartDashboard::PutNumber(  "QuaternionX",          ahrs->GetQuaternionX());
 	SmartDashboard::PutNumber(  "QuaternionY",          ahrs->GetQuaternionY());
 	SmartDashboard::PutNumber(  "QuaternionZ",          ahrs->GetQuaternionZ());
+
+//	 logger->Log(RobotLogId, Logger::kTRACE, "OutputNavxData:: Exiting!");
 }
 
 START_ROBOT_CLASS(Robot)
