@@ -6,7 +6,7 @@
 
 
 namespace {
-	float SHOOTER_WHEELS_ROTATIONS_PER_SECOND_DEFAULT = 75;
+	float SHOOTER_WHEELS_ROTATIONS_PER_SECOND_DEFAULT = 100;
 	float ShooterWheelsRotationsPerSecond = SHOOTER_WHEELS_ROTATIONS_PER_SECOND_DEFAULT;
 }
 ShootCommand::ShootCommand()

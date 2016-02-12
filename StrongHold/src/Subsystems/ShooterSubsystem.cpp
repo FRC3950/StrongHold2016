@@ -5,14 +5,17 @@
 #include "../Config/ConfigInstanceMgr.h"
 
 namespace {
-	const float CONVERSION_RATIO_ROTATIONS_TO_COUNTS = 512;
+	const float CONVERSION_RATIO_ROTATIONS_TO_COUNTS = 2048;
 
 	const double SHOOTER_VOLTAGE_DEFAULT = 0.01;
 
-	const double SHOOTER_ROTS_PER_SEC_EPSILON_DEFAULT = 10.0;
-	double ShooterRotsPerSecEpsilon = SHOOTER_ROTS_PER_SEC_EPSILON_DEFAULT;
+	const double MIN_ELAPSED_TIME_FOR_SPEED_CHECK = 0.01;
 
-	const double CLIMBER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT = .10;
+	const double SHOOTER_WHEEL_ROTS_PER_SEC_EPSILON_DEFAULT = 3.0;
+	double ShooterWheelRotsPerSecEpsilon = SHOOTER_WHEEL_ROTS_PER_SEC_EPSILON_DEFAULT;
+	double ShooterMotorCountsPerSecEpsilon = 0;
+
+	const double CLIMBER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT = 0.01;
 	double ShooterMotorSmallErrorSmoothingFactor = CLIMBER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT;
 
 	const double CLIMBER_MOTOR_LARGE_ERROR_SMOOTHING_FACTOR_DEFAULT = .50;
@@ -21,7 +24,12 @@ namespace {
 	inline double ConvertRotationstoCounts(double rotations) {
 		return rotations * CONVERSION_RATIO_ROTATIONS_TO_COUNTS;
 	}
-	bool InRange(double val, double target, double range) {
+
+	inline double ConvertCountsPerSecToRotationsPerSec(double countsPerSec) {
+		return countsPerSec / CONVERSION_RATIO_ROTATIONS_TO_COUNTS;
+	}
+
+	inline bool InRange(double val, double target, double range) {
 		if (val > (target - range) && val < (target + range)){
 			return true;
 		}
@@ -45,7 +53,8 @@ namespace {
 	    ConfigMgr *configMgr = ConfigInstanceMgr::getInstance();
 
 	    if (!ConfigInited) {
-	    	ShooterRotsPerSecEpsilon = configMgr->getDoubleVal(ConfigKeys::Shooter_RotsPerSecEpsilonKey, SHOOTER_ROTS_PER_SEC_EPSILON_DEFAULT);
+	    	ShooterWheelRotsPerSecEpsilon = configMgr->getDoubleVal(ConfigKeys::Shooter_RotsPerSecEpsilonKey, SHOOTER_WHEEL_ROTS_PER_SEC_EPSILON_DEFAULT);
+	    	ShooterMotorCountsPerSecEpsilon = ConvertRotationstoCounts(ShooterWheelRotsPerSecEpsilon);
 
 	    	ShooterMotorLargeErrorSmoothingFactor = configMgr->getDoubleVal(ConfigKeys::Shooter_LargeErrorSmoothingFactorKey, CLIMBER_MOTOR_LARGE_ERROR_SMOOTHING_FACTOR_DEFAULT);
 	    	ShooterMotorSmallErrorSmoothingFactor = configMgr->getDoubleVal(ConfigKeys::Shooter_SmallErrorSmoothingFactorKey, CLIMBER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT);
@@ -53,7 +62,7 @@ namespace {
 
 			Logger* logger = Logger::GetInstance();
 
-			logger->Log(ShooterSubsystemLogId,Logger::kINFO, "ShooterSubsystem: Rotations / Sec Epsilon = %g\n", ShooterRotsPerSecEpsilon);
+			logger->Log(ShooterSubsystemLogId,Logger::kINFO, "ShooterSubsystem: Rotations / Sec Epsilon = %g\n", ShooterWheelRotsPerSecEpsilon);
 			logger->Log(ShooterSubsystemLogId,Logger::kINFO, "ShooterSubsystem: Small Error Smoothing Factor = %g\n", ShooterMotorSmallErrorSmoothingFactor);
 			logger->Log(ShooterSubsystemLogId,Logger::kINFO, "ShooterSubsystem: Large Error Smoothing Factor = %g\n", ShooterMotorLargeErrorSmoothingFactor);
 
@@ -72,6 +81,8 @@ ShooterSubsystem::ShooterSubsystem() :
 	shooterMotor->ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast);
 	shooterMotor->Set(0.0f);
 	shooterMotor->SetSafetyEnabled(false);
+	shooterMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	//shooterMotor->ConfigEncoderCodesPerRev(1024);
 
 	targetCountsPerSec = 0.0f;
 	lastCountsReadTime = 0.0f;
@@ -122,11 +133,12 @@ void ShooterSubsystem::SetTargetSpeed(float rotsPerSec){
 	}
 
 	shooterMotor->SetPosition(0.0);
-
+	Wait(0.5);
 	targetCountsPerSec = ConvertRotationstoCounts(rotsPerSec);
 	lastCountsReadTime = Timer::GetFPGATimestamp();
 	lastCounts = 0.0;//fabs(shooterMotor->GetPosition());
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Target Counts per second: %f", targetCountsPerSec);
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Epsilon - %g", ShooterMotorCountsPerSecEpsilon);
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "last count read time: %g", lastCountsReadTime);
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "last counts read: %g", lastCounts);
 	shooterMotor->Set(SHOOTER_VOLTAGE_DEFAULT);
@@ -152,15 +164,23 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 		return false;
 	}
 
+	if ((currTime - lastCountsReadTime) < MIN_ELAPSED_TIME_FOR_SPEED_CHECK) {
+		logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Waiting for at least .01 second to elapse, Returning false.");
+
+		return false;
+	}
 	double currSpeed = (currCounts - lastCounts) / (currTime - lastCountsReadTime);
 
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "currSpeed=%g, currCounts=%g, lastCounts=%g, currTime=%g, lastCountsReadTime=%g",
 			    currSpeed, currCounts, lastCounts, currTime, lastCountsReadTime);
 
-	if (InRange(currSpeed, targetCountsPerSec, 10))
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "currSpeed=%g rots/sec",
+			    ConvertCountsPerSecToRotationsPerSec(currSpeed));
+
+	if (InRange(currSpeed, targetCountsPerSec, ShooterMotorCountsPerSecEpsilon))
 	{
-		logger->Log(ShooterSubsystemLogId, Logger::kINFO, "Hit Target Speed: currSpeed=%g, targetCountsPerSec=%g, Returning True.",
-				    currSpeed, targetCountsPerSec);
+		logger->Log(ShooterSubsystemLogId, Logger::kINFO, "Hit Target Speed: currSpeed=%g, targetCountsPerSec=%g, epsilon=%g Returning True.",
+				    currSpeed, targetCountsPerSec, ShooterMotorCountsPerSecEpsilon);
 
 		return true;
 	}
@@ -169,36 +189,36 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 
 	double error = 1.0 - ratio;
 
-	double voltage = shooterMotor->Get();
+	double currVoltage = shooterMotor->Get();
 
-	double smoothingFactor;
+	double smoothingFactor = ShooterMotorSmallErrorSmoothingFactor;
 
-	if (error >= 0.5) {
-		smoothingFactor = ShooterMotorLargeErrorSmoothingFactor;
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Ratio=%g, Error=%g, currVoltage=%g, smoothingFactor=%g",
+			    ratio, error, currVoltage, smoothingFactor);
+
+	double newVoltage = currVoltage + (error * smoothingFactor);
+
+	if (SHOOTER_VOLTAGE_DEFAULT > 0) {
+		newVoltage = newVoltage >= SHOOTER_VOLTAGE_DEFAULT ? newVoltage : SHOOTER_VOLTAGE_DEFAULT;
 	}
 	else {
-		smoothingFactor = ShooterMotorSmallErrorSmoothingFactor;
+		newVoltage = newVoltage <= SHOOTER_VOLTAGE_DEFAULT ? newVoltage : SHOOTER_VOLTAGE_DEFAULT;
 	}
 
-	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Ratio=%g, Error=%g, voltage=%g, smoothingFactor=%g",
-			    ratio, error, voltage, smoothingFactor);
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "New Voltage = %g Before Capping",
+			    newVoltage);
 
-	voltage += error * smoothingFactor;
-
-	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "New Voltage = %g",
-			    voltage);
-
-	if (voltage > 1.0) {
-		voltage = 1.0;
+	if (newVoltage > 1.0) {
+		newVoltage = 1.0;
 	}
-	else if (voltage < -1.0) {
-		voltage = -1.0;
+	else if (newVoltage < -1.0) {
+		newVoltage = -1.0;
 	}
 
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "New Voltage After Capping = %g",
-			    voltage);
+			    newVoltage);
 
-	shooterMotor->Set(voltage);
+	shooterMotor->Set(newVoltage);
 
 	lastCounts = currCounts;
 	lastCountsReadTime = currTime;
