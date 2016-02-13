@@ -31,8 +31,8 @@ public:
 	static std::shared_ptr<Victor> driveSubsystemVictor3;
 	static std::shared_ptr<Victor> driveSubsystemVictor4;
 	static std::shared_ptr<RobotDrive> driveSubsystemRobotDrive41;
-	static std::shared_ptr<DoubleSolenoid> driveSubsystemShifterSolenoid;
-	static std::shared_ptr<DoubleSolenoid> driveSubsystemPowerTakeOffSolenoid;
+	static std::shared_ptr<Solenoid> driveSubsystemShifterSolenoid;
+	static std::shared_ptr<Solenoid> driveSubsystemPowerTakeOffSolenoid;
 
 	static std::shared_ptr<Victor> intakeSubsystemRollerVictor;
 	static std::shared_ptr<CANTalon> intakeSubsystemManipulatorMotor;
@@ -43,8 +43,11 @@ public:
 
 	static std::shared_ptr<CANTalon> uptakeSubsystemIndexerTalon;
 
-	static std::shared_ptr<Solenoid> climberSubsystemSolenoid1;
-	static std::shared_ptr<Solenoid> climberSubsystemSolenoid2;
+//	static std::shared_ptr<Solenoid> climberSubsystemSolenoid1;
+//	static std::shared_ptr<Solenoid> climberSubsystemSolenoid2;
+
+	static std::shared_ptr<Victor> climberSubsystemMotor;
+	static std::shared_ptr<DigitalInput> climberSubsystemLimitSwitch;
 
 	static std::shared_ptr<AHRS> ahrs;
 

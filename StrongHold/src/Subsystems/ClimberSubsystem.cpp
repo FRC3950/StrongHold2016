@@ -5,8 +5,8 @@
 ClimberSubsystem::ClimberSubsystem() :
 		Subsystem("ExampleSubsystem")
 {
-	solenoid1 = RobotMap::climberSubsystemSolenoid1;
-	solenoid2 = RobotMap::climberSubsystemSolenoid2;
+	motor = RobotMap::climberSubsystemMotor;
+	limitSwitch = RobotMap::climberSubsystemLimitSwitch;
 }
 
 void ClimberSubsystem::InitDefaultCommand()
@@ -18,6 +18,13 @@ void ClimberSubsystem::InitDefaultCommand()
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
 void ClimberSubsystem::LaunchClimber(){
-	solenoid1->Set(false);
-	solenoid2->Set(false);
+	if (!limitSwitch->Get()){
+		motor->Set(1.0);
+	}
+}
+void ClimberSubsystem::stopClimber(){
+	motor->Set(0.0);
+}
+bool ClimberSubsystem::inClimbState(){
+	return limitSwitch->Get();
 }

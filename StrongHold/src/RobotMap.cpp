@@ -15,8 +15,8 @@ std::shared_ptr<Victor> RobotMap::driveSubsystemVictor2;
 std::shared_ptr<Victor> RobotMap::driveSubsystemVictor3;
 std::shared_ptr<Victor> RobotMap::driveSubsystemVictor4;
 std::shared_ptr<RobotDrive> RobotMap::driveSubsystemRobotDrive41;
-std::shared_ptr<DoubleSolenoid> RobotMap::driveSubsystemShifterSolenoid;
-std::shared_ptr<DoubleSolenoid> RobotMap::driveSubsystemPowerTakeOffSolenoid;
+std::shared_ptr<Solenoid> RobotMap::driveSubsystemShifterSolenoid;
+std::shared_ptr<Solenoid> RobotMap::driveSubsystemPowerTakeOffSolenoid;
 std::shared_ptr<Victor> RobotMap::intakeSubsystemRollerVictor;
 std::shared_ptr<CANTalon> RobotMap::intakeSubsystemManipulatorMotor;
 std::shared_ptr<DigitalInput> RobotMap::intakeSubsystemUpperLimitSwitch;
@@ -24,8 +24,10 @@ std::shared_ptr<AnalogInput> RobotMap::intakeSubsystemPhotoSensor;
 std::shared_ptr<CANTalon> RobotMap::shooterSubsystemShooterWheelTalon;
 std::shared_ptr<CANTalon> RobotMap::uptakeSubsystemIndexerTalon;
 std::shared_ptr<Solenoid> RobotMap::shooterSubsystemShooterCoverSolenoid;
-std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid1;
-std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid2;
+//std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid1;
+//std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid2;
+std::shared_ptr<Victor> RobotMap::climberSubsystemMotor;
+std::shared_ptr<DigitalInput> RobotMap::climberSubsystemLimitSwitch;
 std::shared_ptr<AHRS> RobotMap::ahrs;
 std::shared_ptr<PowerDistributionPanel> RobotMap::pdp;
 
@@ -49,9 +51,9 @@ void RobotMap::init(){
     driveSubsystemRobotDrive41.reset(new RobotDrive(driveSubsystemVictor1, driveSubsystemVictor2,
               driveSubsystemVictor3, driveSubsystemVictor4));
 
-    driveSubsystemShifterSolenoid.reset(new DoubleSolenoid(0, 1));
+    driveSubsystemShifterSolenoid.reset(new Solenoid(0));
 
-    driveSubsystemPowerTakeOffSolenoid.reset(new DoubleSolenoid(2, 3));
+    driveSubsystemPowerTakeOffSolenoid.reset(new Solenoid(1));
 
     intakeSubsystemRollerVictor.reset(new Victor(4));
 
@@ -61,11 +63,15 @@ void RobotMap::init(){
 
     uptakeSubsystemIndexerTalon.reset(new CANTalon(1));
 
-	climberSubsystemSolenoid1.reset(new Solenoid(4, 5));
+//	climberSubsystemSolenoid1.reset(new Solenoid(2));
+//
+//	climberSubsystemSolenoid2.reset(new Solenoid(3));
 
-	climberSubsystemSolenoid2.reset(new Solenoid(6, 7));
+    climberSubsystemMotor.reset(new Victor(5));
 
-    shooterSubsystemShooterCoverSolenoid.reset(new Solenoid(2));
+    climberSubsystemLimitSwitch.reset(new DigitalInput());
+
+    shooterSubsystemShooterCoverSolenoid.reset(new Solenoid(4));
 
 
 #endif

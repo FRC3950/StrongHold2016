@@ -129,25 +129,25 @@ void DriveSubsystem::Climb(float y) {
 }
 
 void DriveSubsystem::ToggleHighLowGear(){
-	if (gearSwitchSolenoid->Get() == DoubleSolenoid::Value::kForward){
-		gearSwitchSolenoid->Set(DoubleSolenoid::Value::kReverse);
+	if (gearSwitchSolenoid->Get()){
+		gearSwitchSolenoid->Set(false);
 	}
 	else{
-		gearSwitchSolenoid->Set(DoubleSolenoid::Value::kForward);
+		gearSwitchSolenoid->Set(true);
 	}
 }
 
 void DriveSubsystem::SetGear(Gear g){
 	if (g == Gear::high){
-		gearSwitchSolenoid->Set(DoubleSolenoid::Value::kForward);
+		gearSwitchSolenoid->Set(true);
 	}
 	else{
-		gearSwitchSolenoid->Set(DoubleSolenoid::Value::kReverse);
+		gearSwitchSolenoid->Set(false);
 	}
 }
 
 DriveSubsystem::Gear DriveSubsystem::GetGearState() {
-	if (gearSwitchSolenoid->Get() == DoubleSolenoid::Value::kForward) {
+	if (gearSwitchSolenoid->Get()) {
 		return Gear::high;
 	}
 	else {
@@ -156,7 +156,7 @@ DriveSubsystem::Gear DriveSubsystem::GetGearState() {
 }
 
 void DriveSubsystem::syncDriveModeToHardware() {
-	if (powerTakeOffSolenoid->Get() == DoubleSolenoid::Value::kForward) {
+	if (powerTakeOffSolenoid->Get()) {
 		mode = DriveMode::drive;
 	}
 	else {
@@ -165,11 +165,11 @@ void DriveSubsystem::syncDriveModeToHardware() {
 }
 void DriveSubsystem::SetMode(DriveSubsystem::DriveMode dm) {
 	if (dm == DriveMode::drive) {
-		powerTakeOffSolenoid->Set(DoubleSolenoid::Value::kForward);
+		powerTakeOffSolenoid->Set(true);
 		mode = DriveMode::drive;
 	}
 	else {
-		powerTakeOffSolenoid->Set(DoubleSolenoid::Value::kReverse);
+		powerTakeOffSolenoid->Set(false);
 		mode = DriveMode::climb;
 	}
 }

@@ -50,8 +50,8 @@ private:
 	std::shared_ptr<Victor> victor3;
 	std::shared_ptr<Victor> victor4;
 	std::shared_ptr<RobotDrive> robotDrive;
-	std::shared_ptr<DoubleSolenoid> powerTakeOffSolenoid;
-	std::shared_ptr<DoubleSolenoid> gearSwitchSolenoid;
+	std::shared_ptr<Solenoid> powerTakeOffSolenoid;
+	std::shared_ptr<Solenoid> gearSwitchSolenoid;
 
 	DriveMode mode;
 };
