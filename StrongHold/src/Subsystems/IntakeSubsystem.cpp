@@ -6,6 +6,7 @@
 #include "../Config/ConfigInstanceMgr.h"
 #include <map>
 #include "UtilFun.h"
+#include <math.h>
 
 namespace {
 	double UpPosCount = 0.0;
@@ -18,7 +19,7 @@ namespace {
 	double SeekPosRagePositive = 0.5;
 	double SeekPosRangeNegitive = -0.5;
 
-	double PhotoSensorTargetVoltage = 4.0;
+
 
 
 	auto SeekPosToCountsMap = std::map<IntakeSubsystem::SeekManipulatorPos, double>() = {
@@ -26,6 +27,12 @@ namespace {
 			{ IntakeSubsystem::Down, DownPosCount },
 			{ IntakeSubsystem::Intake, IntakePosCount }
 	};
+
+	inline double convertDistanceToVoltage(double distance) {
+		return ((4.282) * exp(-0.158 * distance)) + 0.395;
+	}
+
+	const double PhotoSensorTargetVoltage = convertDistanceToVoltage(5.0);
 }
 
 IntakeSubsystem::IntakeSubsystem() :
@@ -89,13 +96,11 @@ void IntakeSubsystem::findHomePosition(bool forceFind) {
 }
 
 //TO DO: make constants for motor values
-void IntakeSubsystem::SetIntakeMotor(IntakeDirection id, bool usePhotoSensor) {
+void IntakeSubsystem::SetIntakeMotor(IntakeDirection id) {
 	float speed = 0.0f;
 
 	if (id == IntakeDirection::In){
-		if (!usePhotoSensor || (usePhotoSensor && !IsBallLoaded())) {
-			speed = -1.0f;
-		}
+		speed = -1.0f;
 	}
 	else if (id == IntakeDirection::Out) {
 		speed = 1.0f;

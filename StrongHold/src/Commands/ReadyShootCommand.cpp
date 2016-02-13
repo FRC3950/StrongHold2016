@@ -24,7 +24,7 @@ void ReadyShootCommand::Execute()
 	}
 
 	// Do more stuff
-	Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::In, false);
+	Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::In);
 }
 
 // Make this return true when this Command no longer needs to run execute()
@@ -54,5 +54,5 @@ void ReadyShootCommand::Interrupted()
 }
 void ReadyShootCommand::CleanUp(){
 	inited = false;
-	Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Neutral, false);
+	Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Neutral);
 }

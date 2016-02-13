@@ -17,7 +17,7 @@ void OuttakeCommand::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void OuttakeCommand::Execute()
 {
-	Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Out, false);
+	Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Out);
 }
 
 // Make this return true when this Command no longer needs to run execute()

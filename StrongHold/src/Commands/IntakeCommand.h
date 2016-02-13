@@ -13,6 +13,24 @@ public:
 	bool IsFinished();
 	void End();
 	void Interrupted();
+
+private:
+	void InitMembers();
+	void Cleanup();
+	bool WaitBallLoadedState();
+	bool WaitTimeState();
+
+	enum State {
+		Init,
+		WaitBallLoaded,
+		WaitTime,
+		Done
+	};
+
+	State currState;
+	double startTime;
+	double runTime;
+	double timeWaited;
 };
 
 #endif

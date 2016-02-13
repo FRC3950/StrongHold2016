@@ -34,7 +34,6 @@ std::shared_ptr<PowerDistributionPanel> RobotMap::pdp;
 
 void RobotMap::init(){
     LiveWindow *lw = LiveWindow::GetInstance();
-
 #if NOT_YET
     driveSubsystemVictor1.reset(new Victor(0));
     lw->AddActuator("DriveSubsystem", "Victor 1", driveSubsystemVictor1);

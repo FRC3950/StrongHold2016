@@ -24,7 +24,7 @@ public:
 	void InitDefaultCommand();
 	void findHomePosition(bool forceFind);
 
-	void SetIntakeMotor(IntakeDirection id, bool usePhotoSensor);
+	void SetIntakeMotor(IntakeDirection id);
 	bool IsBallLoaded();
 
 	// For the operator to manually move the arm.
