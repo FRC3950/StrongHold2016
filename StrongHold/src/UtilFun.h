@@ -7,6 +7,7 @@
 
 #ifndef SRC_UTILFUN_H_
 #define SRC_UTILFUN_H_
+
 inline float ZeroIfInRangeInclusive(float value, float min, float max) {
 	if ((value >= min) && (value <= max))
 	{

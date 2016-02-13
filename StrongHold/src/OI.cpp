@@ -3,7 +3,7 @@
 #include "Commands/LaunchClimberCommand.h"
 #include "Commands/ToggleShooterHoodCommand.h"
 #include "Commands/ManipulatorSeekPosCommand.h"
-#include "Commands/ShootCommand.h"
+#include "Commands/DashboardShootCommand.h"
 #include "Commands/ShootCommandGroup.h"
 
 OI::OI() {
@@ -24,7 +24,7 @@ OI::OI() {
 	//HomePosButton->WhenPressed(new ManipulatorSeekPosCommand(IntakeSubsystem::SeekManipulatorPos::Up));
 	//IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(IntakeSubsystem::SeekManipulatorPos::Intake));
 	//DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(IntakeSubsystem::SeekManipulatorPos::Down));
-	ReadyShootButton->WhenPressed(new ShootCommand());
+	ReadyShootButton->WhenPressed(new DashboardShootCommand());
 	//ShootButton->WhenPressed(new ShootCommandGroup());
 }
 

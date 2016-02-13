@@ -1,6 +1,6 @@
 
 #include "ShootCommandGroup.h"
-#include "ShootCommand.h"
+#include "DashboardShootCommand.h"
 #include "ReadyShootCommand.h"
 #include "StopShooterCommand.h"
 
@@ -22,7 +22,7 @@ ShootCommandGroup::ShootCommandGroup()
 	// e.g. if Command1 requires chassis, and Command2 requires arm,
 	// a CommandGroup containing them would require both the chassis and the
 	// arm.
-	AddSequential(new ShootCommand());
+	AddSequential(new DashboardShootCommand());
 	AddSequential(new ReadyShootCommand());
 	AddSequential(new StopShooterCommand());
 }

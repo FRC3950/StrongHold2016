@@ -10,6 +10,7 @@ public:
 	enum HoodState{
 			open,closed
 		};
+
 	ShooterSubsystem();
 	void InitDefaultCommand();
 	void ToggleHood();
@@ -17,6 +18,9 @@ public:
 	HoodState GetHoodState();
 	void SetTargetSpeed(float rotsPerSec);
 	bool HasHitTargetSpeed();
+
+	static const float MinRotationsPerSec;
+	static const float MaxRotationsPerSec;
 
 private:
 	// It's desirable that everything possible under private except

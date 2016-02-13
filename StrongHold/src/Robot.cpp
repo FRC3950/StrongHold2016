@@ -1,5 +1,6 @@
 #include "Robot.h"
 #include "Logging.h"
+#include "SmartDashboardKeys.h"
 #include "WPILib.h"
 #include "Commands/Command.h"
 #include "Commands/ExampleCommand.h"
@@ -91,6 +92,7 @@ void Robot::RobotInit()
 	//chooser->AddObject("My Auto", new MyAutoCommand());
 
 	// FIX ME!	SmartDashboard::PutData("Auto Modes", chooser);
+	SmartDashboard::PutNumber(SmartDashboardKeys::ShooterRotsPerSecKey, 0.0);
 
 	if (ahrs) {
 		LiveWindow::GetInstance()->AddSensor(IMUStr, GyroStr, ahrs);

@@ -71,6 +71,9 @@ namespace {
 	}
 }
 
+const float ShooterSubsystem::MinRotationsPerSec = 10.0f;
+const float ShooterSubsystem::MaxRotationsPerSec = 500.0f;
+
 ShooterSubsystem::ShooterSubsystem() :
 		Subsystem("ExampleSubsystem")
 {
@@ -127,8 +130,9 @@ void ShooterSubsystem::SetTargetSpeed(float rotsPerSec){
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "SetTargetSpeed Entered");
 
 	if (rotsPerSec <= 0) {
-		// Error TBD
+		targetCountsPerSec = 0.0;
 		shooterMotor->Set(0.0);
+		logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "SetTargetSpeed: Target Counts per second: %g", targetCountsPerSec);
 		return;
 	}
 
@@ -137,7 +141,7 @@ void ShooterSubsystem::SetTargetSpeed(float rotsPerSec){
 	targetCountsPerSec = ConvertRotationstoCounts(rotsPerSec);
 	lastCountsReadTime = Timer::GetFPGATimestamp();
 	lastCounts = 0.0;//fabs(shooterMotor->GetPosition());
-	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Target Counts per second: %f", targetCountsPerSec);
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Target Counts per second: %g", targetCountsPerSec);
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Epsilon - %g", ShooterMotorCountsPerSecEpsilon);
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "last count read time: %g", lastCountsReadTime);
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "last counts read: %g", lastCounts);
@@ -150,6 +154,13 @@ void ShooterSubsystem::SetTargetSpeed(float rotsPerSec){
 bool ShooterSubsystem::HasHitTargetSpeed() {
 	Logger *logger = Logger::GetInstance();
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "HasHitTargetSpeed Entered");
+
+	if (targetCountsPerSec <= 0.0) {
+		shooterMotor->Set(0.0);
+		logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "HasHitTargetSpeed: targetCountsPerSec <= 0.0, shutting off motor. Returning true.");
+
+		return true;
+	}
 
 	double currTime = Timer::GetFPGATimestamp();
 	double currCounts = fabs(shooterMotor->GetPosition());

@@ -7,14 +7,19 @@
 class ShootCommand: public CommandBase
 {
 public:
-	ShootCommand();
 	void Initialize();
 	void Execute();
 	bool IsFinished();
 	void End();
 	void Interrupted();
 
+protected:
+	 ShootCommand();
+	 virtual float getTargetRotationsPerSecond() = 0;
+
 private:
+	void cleanup();
+
 	bool inited = false;
 };
 
