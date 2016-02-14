@@ -12,6 +12,7 @@
 
 namespace SmartDashboardKeys {
 	extern const std::string ShooterRotsPerSecKey;
+	extern const std::string DriveGearStateKey;
 }
 
 

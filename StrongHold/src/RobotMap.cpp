@@ -15,7 +15,7 @@ std::shared_ptr<Victor> RobotMap::driveSubsystemVictor2;
 std::shared_ptr<Victor> RobotMap::driveSubsystemVictor3;
 std::shared_ptr<Victor> RobotMap::driveSubsystemVictor4;
 std::shared_ptr<RobotDrive> RobotMap::driveSubsystemRobotDrive41;
-std::shared_ptr<Solenoid> RobotMap::driveSubsystemShifterSolenoid;
+std::shared_ptr<DoubleSolenoid> RobotMap::driveSubsystemShifterSolenoid;
 std::shared_ptr<Solenoid> RobotMap::driveSubsystemPowerTakeOffSolenoid;
 std::shared_ptr<Victor> RobotMap::intakeSubsystemRollerVictor;
 std::shared_ptr<CANTalon> RobotMap::intakeSubsystemManipulatorMotor;
@@ -34,7 +34,7 @@ std::shared_ptr<PowerDistributionPanel> RobotMap::pdp;
 
 void RobotMap::init(){
     LiveWindow *lw = LiveWindow::GetInstance();
-#if NOT_YET
+
     driveSubsystemVictor1.reset(new Victor(0));
     lw->AddActuator("DriveSubsystem", "Victor 1", driveSubsystemVictor1);
 
@@ -50,10 +50,10 @@ void RobotMap::init(){
     driveSubsystemRobotDrive41.reset(new RobotDrive(driveSubsystemVictor1, driveSubsystemVictor2,
               driveSubsystemVictor3, driveSubsystemVictor4));
 
-    driveSubsystemShifterSolenoid.reset(new Solenoid(0));
+    driveSubsystemShifterSolenoid.reset(new DoubleSolenoid(0,1));
 
-    driveSubsystemPowerTakeOffSolenoid.reset(new Solenoid(1));
-
+    driveSubsystemPowerTakeOffSolenoid.reset(new Solenoid(2));
+#if NOT_YET
     intakeSubsystemRollerVictor.reset(new Victor(4));
 
     intakeSubsystemManipulatorMotor.reset(new CANTalon(5));
@@ -72,19 +72,23 @@ void RobotMap::init(){
 
     shooterSubsystemShooterCoverSolenoid.reset(new Solenoid(4));
 
-
-#endif
-
     shooterSubsystemShooterWheelTalon.reset(new CANTalon(0));
 
+    pdp.reset(new PowerDistributionPanel(0));
 
-	pdp.reset(new PowerDistributionPanel(0));
+    ahrs.reset(new AHRS(SPI::Port::kMXP));
+#endif
+
+
+
+
+
 
 
     /* Communicate w/navX MXP via the MXP SPI Bus.                                       */
      /* Alternatively:  I2C::Port::kMXP, SerialPort::Port::kMXP or SerialPort::Port::kUSB */
      /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details.   */
-     ahrs.reset(new AHRS(SPI::Port::kMXP));
+
 }
 
 

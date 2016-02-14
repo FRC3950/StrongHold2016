@@ -31,7 +31,7 @@ public:
 	static std::shared_ptr<Victor> driveSubsystemVictor3;
 	static std::shared_ptr<Victor> driveSubsystemVictor4;
 	static std::shared_ptr<RobotDrive> driveSubsystemRobotDrive41;
-	static std::shared_ptr<Solenoid> driveSubsystemShifterSolenoid;
+	static std::shared_ptr<DoubleSolenoid> driveSubsystemShifterSolenoid;
 	static std::shared_ptr<Solenoid> driveSubsystemPowerTakeOffSolenoid;
 
 	static std::shared_ptr<Victor> intakeSubsystemRollerVictor;

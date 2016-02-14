@@ -2,7 +2,10 @@
 #include "../Logging.h"
 #include "../Robot.h"
 #include "../Subsystems/DriveSubsystem.h"
-
+namespace{
+	const float JOYSTICK_Y_DEFAULT_MODIFYER = 1.0f;
+	const float JOYSTICK_TWIST_DEFAULT_MODIFYER = 0.7f;
+}
 DriveCommand::DriveCommand()
 {
 	// Use Requires() here to declare subsystem dependencies
@@ -24,8 +27,11 @@ void DriveCommand::Execute()
 		Robot::driveSubsystem->SetMode(DriveSubsystem::drive);
 	}
 	//float x = Robot::oi->getJoystickX();
-	float y = Robot::oi->getJoystickY();
-	float twist = Robot::oi->getjoystickTwist();
+	float y = -Robot::oi->getJoystickY();
+	float twist = -Robot::oi->getjoystickTwist();
+
+	y *= JOYSTICK_Y_DEFAULT_MODIFYER;
+	twist *= JOYSTICK_TWIST_DEFAULT_MODIFYER;
 
 	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute() y=%f, twist=%f", y, twist);
 

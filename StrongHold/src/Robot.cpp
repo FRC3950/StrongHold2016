@@ -66,17 +66,23 @@ void Robot::RobotInit()
 
 	CommandBase::init();
 
-#if NOT_YET
+	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: Before Drive Subsystem create");
+
 	driveSubsystem.reset(new DriveSubsystem());
+
+	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: After Drive Subsystem create");
+
+	#if NOT_YET
 	intakeSubsystem.reset(new IntakeSubsystem());
 	climberSubsystem.reset(new ClimberSubsystem());
-#endif
+
 
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: Before Shooter Subsystem create");
 
 	shooterSubsystem.reset(new ShooterSubsystem());
 
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: After Shooter Subsystem create");
+#endif
 
 	// This MUST be here. If the OI creates Commands (which it very likely
 	// will), constructing it during the construction of CommandBase (from
@@ -99,7 +105,6 @@ void Robot::RobotInit()
 	}
 
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: Exiting");
-
 }
 
 /**

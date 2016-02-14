@@ -1,6 +1,7 @@
 #include "DriveSubsystem.h"
 #include "../ConfigKeys.h"
 #include "../Config/ConfigInstanceMgr.h"
+#include "../SmartDashBoardKeys.h"
 #include "../Logging.h"
 #include "../RobotMap.h"
 #include "../Commands/DriveCommand.h"
@@ -11,6 +12,8 @@ namespace
 	const float DRIVE_SAFETY_TIME_OUT_DEFAULT = 1.0;
 	const float Y_VAL_EPSILON_RANGE = .05;
 	const float TWIST_VAL_EPSILON_RANGE = .05;
+	const std::string HighGear = "High Gear";
+	const std::string LowGear = "Low Gear";
 
 #if 0
 	void SetSafetyMode(Talon& motor, bool enabled, float timeout) {
@@ -29,6 +32,10 @@ namespace
 			motor.SetSafetyEnabled(enabled);
 			motor.SetExpiration(timeout);
 		}
+
+	void UpdateDashBoardGearState(DriveSubsystem::Gear state){
+		SmartDashboard::PutString(SmartDashboardKeys::DriveGearStateKey, state == DriveSubsystem::Gear::high? HighGear : LowGear);
+	}
 }
 DriveSubsystem::DriveSubsystem() :
 		Subsystem("DriveSubsystem")
@@ -100,6 +107,8 @@ void DriveSubsystem::EnableDriveSubsystem() {
 	victor2->Set(0);
 	victor3->Set(0);
 	victor4->Set(0);
+
+	SetGear(Gear::low);
 }
 
 void DriveSubsystem::ArcadeDrive(float y, float twist) {
@@ -129,21 +138,24 @@ void DriveSubsystem::Climb(float y) {
 }
 
 void DriveSubsystem::ToggleHighLowGear(){
-	if (gearSwitchSolenoid->Get()){
-		gearSwitchSolenoid->Set(false);
+	if (gearSwitchSolenoid->Get() == DoubleSolenoid::kForward){
+		gearSwitchSolenoid->Set(DoubleSolenoid::kReverse);
+		UpdateDashBoardGearState(Gear::low);
 	}
 	else{
-		gearSwitchSolenoid->Set(true);
+		gearSwitchSolenoid->Set(DoubleSolenoid::kForward);
+		UpdateDashBoardGearState(Gear::high);
 	}
 }
 
 void DriveSubsystem::SetGear(Gear g){
 	if (g == Gear::high){
-		gearSwitchSolenoid->Set(true);
+		gearSwitchSolenoid->Set(DoubleSolenoid::kForward);
 	}
 	else{
-		gearSwitchSolenoid->Set(false);
+		gearSwitchSolenoid->Set(DoubleSolenoid::kReverse);
 	}
+	UpdateDashBoardGearState(g);
 }
 
 DriveSubsystem::Gear DriveSubsystem::GetGearState() {
@@ -157,19 +169,19 @@ DriveSubsystem::Gear DriveSubsystem::GetGearState() {
 
 void DriveSubsystem::syncDriveModeToHardware() {
 	if (powerTakeOffSolenoid->Get()) {
-		mode = DriveMode::drive;
+		mode = DriveMode::climb;
 	}
 	else {
-		mode = DriveMode::climb;
+		mode = DriveMode::drive;
 	}
 }
 void DriveSubsystem::SetMode(DriveSubsystem::DriveMode dm) {
 	if (dm == DriveMode::drive) {
-		powerTakeOffSolenoid->Set(true);
+		powerTakeOffSolenoid->Set(false);
 		mode = DriveMode::drive;
 	}
 	else {
-		powerTakeOffSolenoid->Set(false);
+		powerTakeOffSolenoid->Set(true);
 		mode = DriveMode::climb;
 	}
 }
