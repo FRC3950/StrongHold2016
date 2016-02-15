@@ -10,8 +10,6 @@ namespace
 {
 	const bool DRIVE_SAFETY_ENABLED_DEFAULT = false;
 	const float DRIVE_SAFETY_TIME_OUT_DEFAULT = 1.0;
-	const float Y_VAL_EPSILON_RANGE = .05;
-	const float TWIST_VAL_EPSILON_RANGE = .05;
 	const std::string HighGear = "High Gear";
 	const std::string LowGear = "Low Gear";
 
@@ -120,7 +118,7 @@ void DriveSubsystem::ArcadeDrive(float y, float twist) {
 		return;
 	}
 
-	robotDrive->ArcadeDrive(inRangeExclusive(twist, TWIST_VAL_EPSILON_RANGE),inRangeExclusive(y, Y_VAL_EPSILON_RANGE));
+	robotDrive->ArcadeDrive(twist,y);
 }
 
 void DriveSubsystem::Climb(float y) {
@@ -133,7 +131,7 @@ void DriveSubsystem::Climb(float y) {
 	}
 
 	//TO DO: climb code
-	robotDrive->ArcadeDrive(0,inRangeExclusive(y, Y_VAL_EPSILON_RANGE));
+	robotDrive->ArcadeDrive(0,y);
 
 }
 
@@ -184,11 +182,5 @@ void DriveSubsystem::SetMode(DriveSubsystem::DriveMode dm) {
 		powerTakeOffSolenoid->Set(true);
 		mode = DriveMode::climb;
 	}
-}
-float DriveSubsystem::inRangeExclusive(float val, float range){
-	if (val < range && val > -range){
-		return 0;
-	}
-	return val;
 }
 

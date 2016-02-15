@@ -2,9 +2,27 @@
 #include "../Logging.h"
 #include "../Robot.h"
 #include "../Subsystems/DriveSubsystem.h"
+#include <math.h>
 namespace{
 	const float JOYSTICK_Y_DEFAULT_MODIFYER = 1.0f;
-	const float JOYSTICK_TWIST_DEFAULT_MODIFYER = 0.7f;
+	const float JOYSTICK_TWIST_DEFAULT_MODIFYER = .9f;
+
+	const float Y_VAL_EPSILON_RANGE = .02;
+	const float TWIST_VAL_EPSILON_RANGE = .02;
+
+	float ModifyJoystickValues(float val,float power){
+		float out = pow(val,power);
+		if (val < 0 && out > 0) {
+			out *= -1;
+		}
+		return out;
+	}
+	float inRangeExclusive(float val, float range){
+		if (val < range && val > -range){
+			return 0;
+		}
+		return val;
+	}
 }
 DriveCommand::DriveCommand()
 {
@@ -30,10 +48,22 @@ void DriveCommand::Execute()
 	float y = -Robot::oi->getJoystickY();
 	float twist = -Robot::oi->getjoystickTwist();
 
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute()Raw values: y=%f, twist=%f", y, twist);
+
+	y = inRangeExclusive(y,Y_VAL_EPSILON_RANGE);
+	twist = inRangeExclusive(twist, TWIST_VAL_EPSILON_RANGE);
+
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute() After inRange y=%f, twist=%f", y, twist);
+
 	y *= JOYSTICK_Y_DEFAULT_MODIFYER;
 	twist *= JOYSTICK_TWIST_DEFAULT_MODIFYER;
 
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute() y=%f, twist=%f", y, twist);
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute() After Modifier y=%f, twist=%f", y, twist);
+
+	y = ModifyJoystickValues(y,2.0f);
+	twist = ModifyJoystickValues(twist,2.0f);
+
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute() After squaring y=%f, twist=%f", y, twist);
 
 	Robot::driveSubsystem->ArcadeDrive(y,twist);
 }

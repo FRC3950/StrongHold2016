@@ -26,7 +26,6 @@ public:
 	void SetGear(Gear g);
 	Gear GetGearState();
 	void SetMode(DriveMode dm);
-	float inRangeExclusive(float val, float range);
 
 	DriveMode GetMode() const {
 		return mode;
