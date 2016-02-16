@@ -53,7 +53,8 @@ void RobotMap::init(){
     driveSubsystemShifterSolenoid.reset(new DoubleSolenoid(0,1));
 
     driveSubsystemPowerTakeOffSolenoid.reset(new Solenoid(2));
-#if NOT_YET
+
+    #if NOT_YET
     intakeSubsystemRollerVictor.reset(new Victor(4));
 
     intakeSubsystemManipulatorMotor.reset(new CANTalon(5));
@@ -74,21 +75,14 @@ void RobotMap::init(){
 
     shooterSubsystemShooterWheelTalon.reset(new CANTalon(0));
 
-    pdp.reset(new PowerDistributionPanel(0));
-
     ahrs.reset(new AHRS(SPI::Port::kMXP));
 #endif
 
+    pdp.reset(new PowerDistributionPanel(0));
 
-
-
-
-
-
-    /* Communicate w/navX MXP via the MXP SPI Bus.                                       */
+     /* Communicate w/navX MXP via the MXP SPI Bus.                                       */
      /* Alternatively:  I2C::Port::kMXP, SerialPort::Port::kMXP or SerialPort::Port::kUSB */
      /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details.   */
-
 }
 
 

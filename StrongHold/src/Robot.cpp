@@ -42,6 +42,7 @@ DriveMotorCurrents Robot::getDriveMotorCurrents(){
 			pdp->GetCurrent(BackLeftVictor),
 			pdp->GetCurrent(BackRightVictor));
 }
+
 void Robot::RobotInit()
 {
 	Logger *logger = Logger::GetInstance(true, true);
@@ -63,6 +64,7 @@ void Robot::RobotInit()
 	}
 
 	ahrs = RobotMap::ahrs;
+	pdp = RobotMap::pdp;
 
 	CommandBase::init();
 
@@ -164,7 +166,7 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
 	OutputNavxData();
-//	OutputMotorCurrents();
+	OutputMotorCurrents();
 	Scheduler::GetInstance()->Run();
 }
 
@@ -180,6 +182,8 @@ void Robot::OutputMotorCurrents()
 	logger->Log(RobotLogId, Logger::kTRACE, "OutputMotorCurrents:: Entered");
 
 	DriveMotorCurrents currents = getDriveMotorCurrents();
+
+	logger->Log(RobotLogId, Logger::kTRACE, "Back from call to getDriveMotorCurrents");
 
 	SmartDashboard::PutNumber(  "Front Left Drive Motor", currents.getCurrent(DriveMotorCurrents::frontLeft));
 	SmartDashboard::PutNumber(  "Front Right Drive Motor", currents.getCurrent(DriveMotorCurrents::frontRight));
