@@ -17,6 +17,7 @@ std::shared_ptr<ClimberSubsystem> Robot::climberSubsystem;
 std::shared_ptr<ShooterSubsystem> Robot::shooterSubsystem;
 std::shared_ptr<PowerDistributionPanel> Robot::pdp;
 std::unique_ptr<OI> Robot::oi;
+std::shared_ptr<VisionSubsystem> Robot::visionSubsystem;
 
 
 namespace
