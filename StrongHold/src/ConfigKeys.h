@@ -47,6 +47,10 @@ namespace ConfigKeys
 	extern const std::string Drive_TwistToleranceMin;
 	extern const std::string Drive_TwistToleranceMax;
 	extern const std::string Drive_TwistScaleFactor;
+	extern const std::string Drive_ExpAvgCurrentAlphaKey;
+	extern const std::string Drive_TripSafetyActionCurrentAvgKey;
+	extern const std::string Drive_ResetOverloadConditionAvgCurrentLevelKey;
+	extern const std::string Drive_SafetyActionMinTimeStepsCheckThresholdKey;
 
 	extern const std::string Drive_YToleranceMin;
 	extern const std::string Drive_YToleranceMax;

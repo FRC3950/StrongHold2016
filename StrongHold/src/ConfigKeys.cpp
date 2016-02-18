@@ -88,6 +88,14 @@ namespace ConfigKeys
 
 	const std::string Drive_AutoDriveMinSlowDownSpeedPercentageKey = "Drive_AutoDriveMinSlowDownSpeedPercentage";
 
+	const std::string Drive_ExpAvgCurrentAlphaKey = "Drive_ExpAvgCurrentAlpha";
+
+	const std::string Drive_TripSafetyActionCurrentAvgKey = "Drive_TripSafetyActionCurrentAvg";
+
+	const std::string Drive_ResetOverloadConditionAvgCurrentLevelKey = "Drive_ResetOverloadConditionAvgCurrentLevel";
+
+	const std::string Drive_SafetyActionMinTimeStepsCheckThresholdKey = "Drive_SafetyActionMiTimeStepsCheckThreshold";
+
 	const std::string Shooter_RotsPerSecEpsilonKey = "Shooter_RotsPerSecEpsilonKey";
 
 	const std::string Shooter_SmallErrorSmoothingFactorKey = "Shooter_SmallErrorSmoothingFactorKey";

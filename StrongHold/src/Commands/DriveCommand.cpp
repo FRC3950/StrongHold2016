@@ -52,8 +52,8 @@ void DriveCommand::Execute()
 {
 	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute Enter()");
 
-	if (!Robot::driveSubsystem->inDriveMode()) {
-		Robot::driveSubsystem->SetMode(DriveSubsystem::drive);
+	if (!Robot::driveSubsystem->InDriveMode()) {
+		Robot::driveSubsystem->SetMode(DriveSubsystem::DrivingMode);
 	}
 	//float x = Robot::oi->getJoystickX();
 	float y = -Robot::oi->getJoystickY();

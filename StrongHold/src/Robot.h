@@ -44,7 +44,7 @@ public:
 
 private:
 	void OutputNavxData();
-	void OutputMotorCurrents();
+	void MonitorMotorCurrents();
 
 	std::unique_ptr<SendableChooser> chooser;
 	std::shared_ptr<AHRS> ahrs;

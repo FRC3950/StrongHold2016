@@ -15,7 +15,7 @@ std::shared_ptr<Victor> RobotMap::driveSubsystemVictor2;
 std::shared_ptr<Victor> RobotMap::driveSubsystemVictor3;
 std::shared_ptr<Victor> RobotMap::driveSubsystemVictor4;
 std::shared_ptr<RobotDrive> RobotMap::driveSubsystemRobotDrive41;
-std::shared_ptr<DoubleSolenoid> RobotMap::driveSubsystemShifterSolenoid;
+std::shared_ptr<Solenoid> RobotMap::driveSubsystemShifterSolenoid;
 std::shared_ptr<Solenoid> RobotMap::driveSubsystemPowerTakeOffSolenoid;
 std::shared_ptr<Victor> RobotMap::intakeSubsystemRollerVictor;
 std::shared_ptr<CANTalon> RobotMap::intakeSubsystemManipulatorMotor;
@@ -50,9 +50,9 @@ void RobotMap::init(){
     driveSubsystemRobotDrive41.reset(new RobotDrive(driveSubsystemVictor1, driveSubsystemVictor2,
               driveSubsystemVictor3, driveSubsystemVictor4));
 
-    driveSubsystemShifterSolenoid.reset(new DoubleSolenoid(0,1));
+    driveSubsystemShifterSolenoid.reset(new Solenoid(0));
 
-    driveSubsystemPowerTakeOffSolenoid.reset(new Solenoid(2));
+    driveSubsystemPowerTakeOffSolenoid.reset(new Solenoid(1));
 
     #if NOT_YET
     intakeSubsystemRollerVictor.reset(new Victor(4));

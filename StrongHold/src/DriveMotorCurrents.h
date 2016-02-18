@@ -11,10 +11,13 @@
 class DriveMotorCurrents {
 public:
 	enum MotorId {
-		frontLeft = 0,
+		firstMotor = 0,
+		frontLeft = firstMotor,
 		frontRight,
 		backLeft,
-		backRight
+		backRight,
+		lastMotor = backRight,
+		numMotors
 	};
 
 	DriveMotorCurrents(double frontLeft, double frontRight, double backLeft, double backRight) {
@@ -30,8 +33,6 @@ public:
 
 private:
 	double currents[4];
-
-
 };
 
 #endif /* SRC_DRIVEMOTORCURRENTS_H_ */

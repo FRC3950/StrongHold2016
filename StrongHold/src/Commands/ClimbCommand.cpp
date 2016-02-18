@@ -19,8 +19,8 @@ void ClimbCommand::Initialize()
 void ClimbCommand::Execute()
 {
 	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "ClimbCommand::Execute Enter()");
-	if (!Robot::driveSubsystem->inClimbMode()) {
-		Robot::driveSubsystem->SetMode(DriveSubsystem::climb);
+	if (!Robot::driveSubsystem->InClimbMode()) {
+		Robot::driveSubsystem->SetMode(DriveSubsystem::ClimbingMode);
 	}
 	float y = Robot::oi->getJoystickY();
 	Robot::driveSubsystem->Climb(y);

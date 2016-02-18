@@ -116,6 +116,8 @@ void Robot::RobotInit()
  */
 void Robot::DisabledInit()
 {
+	driveSubsystem->ClearOverloadCondition();
+	driveSubsystem->ResetAvgMotorCurrents();
 }
 
 void Robot::DisabledPeriodic()
@@ -150,6 +152,7 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
+	MonitorMotorCurrents();
 	Scheduler::GetInstance()->Run();
 }
 
@@ -166,7 +169,7 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
 	OutputNavxData();
-	OutputMotorCurrents();
+	MonitorMotorCurrents();
 	Scheduler::GetInstance()->Run();
 }
 
@@ -175,7 +178,7 @@ void Robot::TestPeriodic()
 	LiveWindow::GetInstance()->Run();
 }
 
-void Robot::OutputMotorCurrents()
+void Robot::MonitorMotorCurrents()
 {
 	Logger *logger = Logger::GetInstance();
 
@@ -185,10 +188,14 @@ void Robot::OutputMotorCurrents()
 
 	logger->Log(RobotLogId, Logger::kTRACE, "Back from call to getDriveMotorCurrents");
 
-	SmartDashboard::PutNumber(  "Front Left Drive Motor", currents.getCurrent(DriveMotorCurrents::frontLeft));
-	SmartDashboard::PutNumber(  "Front Right Drive Motor", currents.getCurrent(DriveMotorCurrents::frontRight));
-	SmartDashboard::PutNumber(  "Back Left Drive Motor", currents.getCurrent(DriveMotorCurrents::backLeft));
-	SmartDashboard::PutNumber(  "Back Right Drive Motor", currents.getCurrent(DriveMotorCurrents::backRight));
+	driveSubsystem->AvgNewMotorCurrents(currents);
+
+	logger->Log(RobotLogId, Logger::kTRACE, "Back from call to driveSubsyste->AvgNewMotorCurrents");
+
+	SmartDashboard::PutNumber("Front Left Drive Motor", currents.getCurrent(DriveMotorCurrents::frontLeft));
+	SmartDashboard::PutNumber("Front Right Drive Motor", currents.getCurrent(DriveMotorCurrents::frontRight));
+	SmartDashboard::PutNumber("Back Left Drive Motor", currents.getCurrent(DriveMotorCurrents::backLeft));
+	SmartDashboard::PutNumber("Back Right Drive Motor", currents.getCurrent(DriveMotorCurrents::backRight));
 
 	bool goodCurrent = true;
 	if (currents.getCurrent(DriveMotorCurrents::frontLeft) > DriveVictorMaxCurrent ||
