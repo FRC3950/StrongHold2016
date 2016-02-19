@@ -51,6 +51,7 @@ namespace ConfigKeys
 	extern const std::string Drive_TripSafetyActionCurrentAvgKey;
 	extern const std::string Drive_ResetOverloadConditionAvgCurrentLevelKey;
 	extern const std::string Drive_SafetyActionMinTimeStepsCheckThresholdKey;
+	extern const std::string Drive_AboveAvgCurrConsecEpochThresholdKey;
 
 	extern const std::string Drive_YToleranceMin;
 	extern const std::string Drive_YToleranceMax;

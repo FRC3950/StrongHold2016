@@ -75,8 +75,9 @@ void RobotMap::init(){
 
     shooterSubsystemShooterWheelTalon.reset(new CANTalon(0));
 
-    ahrs.reset(new AHRS(SPI::Port::kMXP));
 #endif
+
+    ahrs.reset(new AHRS(SPI::Port::kMXP));
 
     pdp.reset(new PowerDistributionPanel(0));
 

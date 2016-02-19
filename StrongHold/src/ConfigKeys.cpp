@@ -96,6 +96,8 @@ namespace ConfigKeys
 
 	const std::string Drive_SafetyActionMinTimeStepsCheckThresholdKey = "Drive_SafetyActionMiTimeStepsCheckThreshold";
 
+	const std::string Drive_AboveAvgCurrConsecEpochThresholdKey = "Drive_Drive_AboveAvgCurrConsecEpochThreshold";
+
 	const std::string Shooter_RotsPerSecEpsilonKey = "Shooter_RotsPerSecEpsilonKey";
 
 	const std::string Shooter_SmallErrorSmoothingFactorKey = "Shooter_SmallErrorSmoothingFactorKey";

@@ -7,6 +7,8 @@
 #include "Commands/DashboardShootCommand.h"
 #include "Commands/ShootCommandGroup.h"
 #include "Commands/ToggleGearCommand.h"
+#include "Commands/ClimbCommand.h"
+#include "Commands/DriveSubsystemInteruptCommand.h"
 
 OI::OI() {
 	// Process operator interface input here.
@@ -27,6 +29,8 @@ OI::OI() {
 	ReadyShootButton.reset(new JoystickButton(xBoxControler.get(),5));
 	ShootButton.reset(new JoystickButton(xBoxControler.get(),6));
 	ShiftGearButton.reset(new JoystickButton(joystick.get(),4));
+	PowerTakeOffButton.reset(new JoystickButton(joystick.get(),11));
+	ResetToDriveButton.reset(new JoystickButton(joystick.get(),12));
 
 	logger->Log(OIId, Logger::kTRACE, "OI::ctor Created Joystick Buttons");
 
@@ -38,6 +42,8 @@ OI::OI() {
 	//ReadyShootButton->WhenPressed(new DashboardShootCommand());
 	//ShootButton->WhenPressed(new ShootCommandGroup());
 	ShiftGearButton->WhenPressed(new ToggleGearCommand());
+	PowerTakeOffButton->WhenPressed(new ClimbCommand());
+	ResetToDriveButton->WhenPressed(new DriveSubsystemInteruptCommand());
 
 	logger->Log(OIId, Logger::kTRACE, "OI::ctor Assigned Commands to Joystick Buttons");
 

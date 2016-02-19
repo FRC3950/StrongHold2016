@@ -37,10 +37,10 @@ namespace
 
 DriveMotorCurrents Robot::getDriveMotorCurrents(){
 	return DriveMotorCurrents(
-			pdp->GetCurrent(FrontLeftVictor),
-			pdp->GetCurrent(FrontRightVictor),
-			pdp->GetCurrent(BackLeftVictor),
-			pdp->GetCurrent(BackRightVictor));
+			pdp->GetCurrent(15),
+			pdp->GetCurrent(13),
+			pdp->GetCurrent(14),
+			pdp->GetCurrent(12));
 }
 
 void Robot::RobotInit()
@@ -196,6 +196,10 @@ void Robot::MonitorMotorCurrents()
 	SmartDashboard::PutNumber("Front Right Drive Motor", currents.getCurrent(DriveMotorCurrents::frontRight));
 	SmartDashboard::PutNumber("Back Left Drive Motor", currents.getCurrent(DriveMotorCurrents::backLeft));
 	SmartDashboard::PutNumber("Back Right Drive Motor", currents.getCurrent(DriveMotorCurrents::backRight));
+	logger->Log(RobotLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 1: %g",currents.getCurrent(DriveMotorCurrents::frontLeft));
+	logger->Log(RobotLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 2: %g",currents.getCurrent(DriveMotorCurrents::frontRight));
+	logger->Log(RobotLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 3: %g",currents.getCurrent(DriveMotorCurrents::backLeft));
+	logger->Log(RobotLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 4: %g",currents.getCurrent(DriveMotorCurrents::backRight));
 
 	bool goodCurrent = true;
 	if (currents.getCurrent(DriveMotorCurrents::frontLeft) > DriveVictorMaxCurrent ||

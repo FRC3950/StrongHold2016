@@ -100,4 +100,5 @@ void DriveCommand::End()
 // subsystems is scheduled to run
 void DriveCommand::Interrupted()
 {
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Interrupted() Enter");
 }

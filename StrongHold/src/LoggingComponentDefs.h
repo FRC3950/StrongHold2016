@@ -15,6 +15,6 @@ const unsigned int ConfigurationId			= 1U << 7;  //0x00000080U;
 const unsigned int OIId						= 1U << 8;  //0x00000100U;
 
 const unsigned int DefaultLoggingMask = (RobotLogId | ShooterSubsystemLogId | ConfigurationId | DriveSubsystemLogId | VisionTargetingId | GantrySubsystemLogId | IntakeSubsystemLogId);
-const Logger::MessageType DefaultLoggingLevel = Logger::kINFO;
+const Logger::MessageType DefaultLoggingLevel = Logger::kTRACE;
 
 #endif

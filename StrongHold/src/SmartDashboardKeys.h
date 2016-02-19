@@ -19,6 +19,13 @@ namespace SmartDashboardKeys {
 
 	extern const std::string BackLeftDriveAvgCurrentKey;
 	extern const std::string BackRightDriveAvgCurrentKey;
+
+	extern const std::string FrontLeftDriveConsecEpochsAboveThresholdKey;
+	extern const std::string FrontRightDriveConsecEpochsAboveThresholdKey;
+
+	extern const std::string BackLeftDriveConsecEpochsAboveThresholdKey;
+	extern const std::string BackRightDriveConsecEpochsAboveThresholdKey;
+
 }
 
 

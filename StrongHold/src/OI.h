@@ -15,6 +15,8 @@ private:
 	std::shared_ptr<JoystickButton> ReadyShootButton;// may be unnecessary
 	std::shared_ptr<JoystickButton> ShootButton;
 	std::shared_ptr<JoystickButton> ShiftGearButton;
+	std::shared_ptr<JoystickButton> PowerTakeOffButton;
+	std::shared_ptr<JoystickButton> ResetToDriveButton;
 	//possibly add shoot buttons for different distances or just base it off vision.
 
 public:

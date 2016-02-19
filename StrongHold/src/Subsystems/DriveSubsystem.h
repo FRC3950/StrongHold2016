@@ -36,7 +36,7 @@ public:
 	void SetMode(DriveMode dm);
 	void ClearOverloadCondition() { overloadCondition = false; }
 
-	SafetyCurrentAction CheckAvgMotorCurrent(double avgCurrent);
+	SafetyCurrentAction CheckAvgMotorCurrent(DriveMotorCurrents::MotorId motorId);
 
 	DriveMode GetMode() const {
 		return mode;
@@ -56,6 +56,7 @@ public:
 
 private:
 	void SyncDriveModeToHardware();
+	void OutputAvgMotorCurrent(DriveMotorCurrents::MotorId motorId) const;
 
 	// It's desirable that everything possible be put under private except
 	// for methods that implement subsystem capabilities
@@ -70,6 +71,8 @@ private:
 	DriveMode mode;
 
 	std::vector<double> avgMotorCurrents;
+	std::vector<int> aboveAvgCurrentThresholdEpochCounts;
+
 	unsigned timeStep;
 	bool overloadCondition = false;
 };

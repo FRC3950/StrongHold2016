@@ -25,6 +25,8 @@ namespace
 
 	const unsigned int SAFETY_ACTION_MIN_TIME_STEPS_CHECK_THRESHOLD_DEFAULT = 10;
 	unsigned int SafetyActionMinTimeStepsCheckThreshold = SAFETY_ACTION_MIN_TIME_STEPS_CHECK_THRESHOLD_DEFAULT;
+	const int ABOVE_AVG_CURR_CONSEC_EPOCH_THRESHOLD_DEFAULT = 1;
+	int AboveAvgCurrConsecEpochThreshold = ABOVE_AVG_CURR_CONSEC_EPOCH_THRESHOLD_DEFAULT;
 
 #if 0
 	void SetSafetyMode(Talon& motor, bool enabled, float timeout) {
@@ -59,6 +61,8 @@ namespace
 	    	TripSafetyActionCurrentAvg = configMgr->getDoubleVal(ConfigKeys::Drive_TripSafetyActionCurrentAvgKey, TRIP_SAFETY_ACTION_CURRENT_AVG_DEFAULT);
 	    	ResetOverloadConditionAvgCurrentLevel = configMgr->getDoubleVal(ConfigKeys::Drive_ResetOverloadConditionAvgCurrentLevelKey, RESET_OVERLOAD_CONDITION_AVG_CURRENT_LEVEL_DEFAULT);
 	    	SafetyActionMinTimeStepsCheckThreshold = configMgr->getIntVal(ConfigKeys::Drive_SafetyActionMinTimeStepsCheckThresholdKey, SAFETY_ACTION_MIN_TIME_STEPS_CHECK_THRESHOLD_DEFAULT);
+	    	AboveAvgCurrConsecEpochThreshold = configMgr->getIntVal(ConfigKeys::Drive_AboveAvgCurrConsecEpochThresholdKey, ABOVE_AVG_CURR_CONSEC_EPOCH_THRESHOLD_DEFAULT);
+
 
 
 			Logger* logger = Logger::GetInstance();
@@ -66,7 +70,8 @@ namespace
 			logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Exponential Avg Alpha = %g\n", ExpAvgCurrentAlpha);
 			logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Trip Safety Action Current = %g\n", TripSafetyActionCurrentAvg);
 			logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Reset Overload Condition Avg Current Level = %g\n", ResetOverloadConditionAvgCurrentLevel);
-			logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Safety Action Min Time Steps Check Threshold = %d\n", SafetyActionMinTimeStepsCheckThreshold);
+			logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Safety Action Min Time Steps Check Threshold = %u\n", SafetyActionMinTimeStepsCheckThreshold);
+			logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Above Avg Curr Consec Epoch Threshold = %u\n", SafetyActionMinTimeStepsCheckThreshold);
 
 	      	ConfigInited = true;
 	    }
@@ -75,7 +80,8 @@ namespace
 
 DriveSubsystem::DriveSubsystem() :
 		Subsystem("DriveSubsystem"),
-		avgMotorCurrents(4, 0.0)
+		avgMotorCurrents(DriveMotorCurrents::numMotors, 0.0),
+		aboveAvgCurrentThresholdEpochCounts(DriveMotorCurrents::numMotors, 0)
 {
 	victor1 = RobotMap::driveSubsystemVictor1;
 	victor2 = RobotMap::driveSubsystemVictor2;
@@ -238,16 +244,20 @@ void DriveSubsystem::SetMode(DriveSubsystem::DriveMode dm) {
 }
 
 void DriveSubsystem::ResetAvgMotorCurrents() {
-	for (double &curr : avgMotorCurrents)
-	{
-		curr = 0.0;
+	for (unsigned int currId = DriveMotorCurrents::firstMotor;
+		 currId < DriveMotorCurrents::numMotors;
+		 ++currId) {
+		avgMotorCurrents[currId] = 0.0;
+		aboveAvgCurrentThresholdEpochCounts[currId] = 0;
 	}
+
 	timeStep = 0;
 	overloadCondition = false;
 }
 
-DriveSubsystem::SafetyCurrentAction DriveSubsystem::CheckAvgMotorCurrent(double avgCurrent) {
-	if (avgCurrent >= TripSafetyActionCurrentAvg) {
+DriveSubsystem::SafetyCurrentAction DriveSubsystem::CheckAvgMotorCurrent(DriveMotorCurrents::MotorId motorId) {
+	if ((avgMotorCurrents[motorId] >= TripSafetyActionCurrentAvg) &&
+		(aboveAvgCurrentThresholdEpochCounts[motorId] >= AboveAvgCurrConsecEpochThreshold))	{
 		if (InDriveMode()) {
 			if (GetGearState() == Gear::HighGear) {
 				return LowGearAction;
@@ -272,45 +282,72 @@ namespace {
 		 &SmartDashboardKeys::BackLeftDriveAvgCurrentKey,
 		 &SmartDashboardKeys::BackRightDriveAvgCurrentKey
 	};
+
+	const std::string* AboveAvgCurrentThresholdEpochCountsSmartDashBoardKeys[] = {
+		&SmartDashboardKeys::FrontLeftDriveConsecEpochsAboveThresholdKey,
+		&SmartDashboardKeys::FrontRightDriveConsecEpochsAboveThresholdKey,
+		&SmartDashboardKeys::BackLeftDriveConsecEpochsAboveThresholdKey,
+		&SmartDashboardKeys::BackRightDriveConsecEpochsAboveThresholdKey
+	};
+}
+
+void DriveSubsystem::OutputAvgMotorCurrent(DriveMotorCurrents::MotorId motorId) const {
+	SmartDashboard::PutNumber(*AvgSmartDashBoardKeys[motorId], avgMotorCurrents[motorId]);
+	SmartDashboard::PutNumber(*AboveAvgCurrentThresholdEpochCountsSmartDashBoardKeys[motorId], aboveAvgCurrentThresholdEpochCounts[motorId]);
 }
 
 void DriveSubsystem::AvgNewMotorCurrents(const DriveMotorCurrents &currents)
 {
-	SafetyCurrentAction action = NoAction;
+	SafetyCurrentAction pendingAction = NoAction;
 	int motorsBelowAvgCurrentCount = 0;
 
 	if (timeStep++ > 0)
 	{
-		for (unsigned int motorId = DriveMotorCurrents::firstMotor; motorId <= DriveMotorCurrents::lastMotor; ++motorId)
+		for (unsigned int currMotorId = DriveMotorCurrents::firstMotor; currMotorId <= DriveMotorCurrents::lastMotor; ++currMotorId)
 		{
-			avgMotorCurrents[motorId] = (ExpAvgCurrentAlpha * currents.getCurrent(static_cast<DriveMotorCurrents::MotorId>(motorId))) + ((1 - ExpAvgCurrentAlpha) * avgMotorCurrents[motorId]);
-			SmartDashboard::PutNumber(*AvgSmartDashBoardKeys[motorId], avgMotorCurrents[motorId]);
+			avgMotorCurrents[currMotorId] = (ExpAvgCurrentAlpha * currents.getCurrent(static_cast<DriveMotorCurrents::MotorId>(currMotorId))) + ((1 - ExpAvgCurrentAlpha) * avgMotorCurrents[currMotorId]);
+
+			if (avgMotorCurrents[currMotorId] >= TripSafetyActionCurrentAvg) {
+				++aboveAvgCurrentThresholdEpochCounts[currMotorId];
+			}
+			else {
+				aboveAvgCurrentThresholdEpochCounts[currMotorId] = 0;
+			}
+
+			OutputAvgMotorCurrent(static_cast<DriveMotorCurrents::MotorId>(currMotorId));
 
 			if (timeStep >= SafetyActionMinTimeStepsCheckThreshold) {
-				SafetyCurrentAction result = CheckAvgMotorCurrent(avgMotorCurrents[motorId]);
+				if (pendingAction == NoAction) {
+					// Check to see if a new action should be taken?
+					SafetyCurrentAction newAction = CheckAvgMotorCurrent(static_cast<DriveMotorCurrents::MotorId>(currMotorId));
 
-				if (result == NoAction) {
-					if (overloadCondition && (avgMotorCurrents[motorId] < ResetOverloadConditionAvgCurrentLevel)) {
-						++motorsBelowAvgCurrentCount;
+					// Does the current motor, motorId, requires no action be taken.
+					if (newAction == NoAction) {
+						// Are we in an overloadCondition and is the current motor's avg current below the reset threshold
+						if (overloadCondition && (avgMotorCurrents[currMotorId] < ResetOverloadConditionAvgCurrentLevel)) {
+							// Count this as a good motor.
+							++motorsBelowAvgCurrentCount;
+						}
 					}
-				}
-
-				if (action == NoAction) {
-					action = result;
+					else {
+						// Set the pending action.
+						pendingAction = newAction;
+					}
 				}
 			}
 		}
 	}
 	else
 	{
-		for (unsigned int motorId = DriveMotorCurrents::firstMotor; motorId <= DriveMotorCurrents::lastMotor; ++motorId)
+		for (unsigned int currMotorId = DriveMotorCurrents::firstMotor; currMotorId <= DriveMotorCurrents::lastMotor; ++currMotorId)
 		{
-			avgMotorCurrents[motorId] = currents.getCurrent(static_cast<DriveMotorCurrents::MotorId>(motorId));
-			SmartDashboard::PutNumber(*AvgSmartDashBoardKeys[motorId], avgMotorCurrents[motorId]);
+			avgMotorCurrents[currMotorId] = currents.getCurrent(static_cast<DriveMotorCurrents::MotorId>(currMotorId));
+			aboveAvgCurrentThresholdEpochCounts[currMotorId] = 0;
+			OutputAvgMotorCurrent(static_cast<DriveMotorCurrents::MotorId>(currMotorId));
 		}
 	}
 
-	switch (action) {
+	switch (pendingAction) {
 	case NoAction:
 	default:
 		if (overloadCondition && (motorsBelowAvgCurrentCount >= DriveMotorCurrents::numMotors)) {

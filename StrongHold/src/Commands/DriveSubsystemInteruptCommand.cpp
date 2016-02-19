@@ -1,42 +1,39 @@
+#include "DriveSubsystemInteruptCommand.h"
 #include "../Robot.h"
-#include "ToggleGearCommand.h"
-#include "../Logging.h"
 
-
-ToggleGearCommand::ToggleGearCommand()
+DriveSubsystemInteruptCommand::DriveSubsystemInteruptCommand()
 {
 	// Use Requires() here to declare subsystem dependencies
 	Requires(Robot::driveSubsystem.get());
 }
 
 // Called just before this Command runs the first time
-void ToggleGearCommand::Initialize()
+void DriveSubsystemInteruptCommand::Initialize()
 {
 
 }
 
 // Called repeatedly when this Command is scheduled to run
-void ToggleGearCommand::Execute()
+void DriveSubsystemInteruptCommand::Execute()
 {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "ToggleGearCommand::Execute() Enter");
-	Robot::driveSubsystem->ToggleHighLowGear();
+
 }
 
 // Make this return true when this Command no longer needs to run execute()
-bool ToggleGearCommand::IsFinished()
+bool DriveSubsystemInteruptCommand::IsFinished()
 {
 	return true;
 }
 
 // Called once after isFinished returns true
-void ToggleGearCommand::End()
+void DriveSubsystemInteruptCommand::End()
 {
 
 }
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
-void ToggleGearCommand::Interrupted()
+void DriveSubsystemInteruptCommand::Interrupted()
 {
 
 }
