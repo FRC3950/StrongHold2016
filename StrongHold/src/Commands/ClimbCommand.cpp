@@ -18,7 +18,7 @@ void ClimbCommand::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void ClimbCommand::Execute()
 {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "ClimbCommand::Execute Enter()");
+	Logger::GetInstance()->Log(ClimbingLogId, Logger::kTRACE, "ClimbCommand::Execute Enter()");
 	if (!Robot::driveSubsystem->InClimbMode()) {
 		Robot::driveSubsystem->SetMode(DriveSubsystem::ClimbingMode);
 	}
@@ -29,19 +29,19 @@ void ClimbCommand::Execute()
 // Make this return true when this Command no longer needs to run execute()
 bool ClimbCommand::IsFinished()
 {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "ClimbCommand::IsFinished() Enter");
+	Logger::GetInstance()->Log(ClimbingLogId, Logger::kTRACE, "ClimbCommand::IsFinished() Enter");
 	return false;
 }
 
 // Called once after isFinished returns true
 void ClimbCommand::End()
 {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "ClimbCommand::End() Enter");
+	Logger::GetInstance()->Log(ClimbingLogId, Logger::kTRACE, "ClimbCommand::End() Enter");
 }
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
 void ClimbCommand::Interrupted()
 {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "ClimbCommand::Interrupted() Enter");
+	Logger::GetInstance()->Log(ClimbingLogId, Logger::kTRACE, "ClimbCommand::Interrupted() Enter");
 }

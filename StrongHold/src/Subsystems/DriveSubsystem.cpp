@@ -30,7 +30,7 @@ namespace
 
 #if 0
 	void SetSafetyMode(Talon& motor, bool enabled, float timeout) {
-		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveSubsystem::SetSafteyMode() = %s, timeout=%f",
+		Logger::GetInstance()->Log(DriveMotorSafetyLogId, Logger::kTRACE, "DriveSubsystem::SetSafteyMode() = %s, timeout=%f",
 			enabled ? "TRUE" : "FALSE", timeout);
 
 		motor.SetSafetyEnabled(enabled);
@@ -39,7 +39,7 @@ namespace
 #endif
 
 	void VictorSetSafetyMode(Victor& motor, bool enabled, float timeout) {
-			Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveSubsystem::SetSafteyMode() = %s, timeout=%f",
+			Logger::GetInstance()->Log(DriveMotorSafetyLogId, Logger::kTRACE, "DriveSubsystem::SetSafteyMode() = %s, timeout=%f",
 				enabled ? "TRUE" : "FALSE", timeout);
 
 			motor.SetSafetyEnabled(enabled);
@@ -67,11 +67,11 @@ namespace
 
 			Logger* logger = Logger::GetInstance();
 
-			logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Exponential Avg Alpha = %g\n", ExpAvgCurrentAlpha);
-			logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Trip Safety Action Current = %g\n", TripSafetyActionCurrentAvg);
-			logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Reset Overload Condition Avg Current Level = %g\n", ResetOverloadConditionAvgCurrentLevel);
-			logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Safety Action Min Time Steps Check Threshold = %u\n", SafetyActionMinTimeStepsCheckThreshold);
-			logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Above Avg Curr Consec Epoch Threshold = %u\n", SafetyActionMinTimeStepsCheckThreshold);
+			logger->Log(DriveMotorSafetyLogId, Logger::kINFO, "DriveSubsystem: Exponential Avg Alpha = %g\n", ExpAvgCurrentAlpha);
+			logger->Log(DriveMotorSafetyLogId, Logger::kINFO, "DriveSubsystem: Trip Safety Action Current = %g\n", TripSafetyActionCurrentAvg);
+			logger->Log(DriveMotorSafetyLogId, Logger::kINFO, "DriveSubsystem: Reset Overload Condition Avg Current Level = %g\n", ResetOverloadConditionAvgCurrentLevel);
+			logger->Log(DriveMotorSafetyLogId, Logger::kINFO, "DriveSubsystem: Safety Action Min Time Steps Check Threshold = %u\n", SafetyActionMinTimeStepsCheckThreshold);
+			logger->Log(DriveMotorSafetyLogId, Logger::kINFO, "DriveSubsystem: Above Avg Curr Consec Epoch Threshold = %u\n", SafetyActionMinTimeStepsCheckThreshold);
 
 	      	ConfigInited = true;
 	    }
@@ -126,7 +126,7 @@ void DriveSubsystem::EnableDriveSubsystem() {
 		expiration = configMgr->getDoubleVal(ConfigKeys::Drive_SafetyTimeOut, DRIVE_SAFETY_TIME_OUT_DEFAULT);
 	}
 
-	Logger::GetInstance()->Log(DriveSubsystemLogId,Logger::kINFO, "DriveSubsystem:EnableDriveSubsystem() ->SafetyEnable=%s, timeout=%f\n",
+	Logger::GetInstance()->Log(DrivingLogId,Logger::kINFO, "DriveSubsystem:EnableDriveSubsystem() ->SafetyEnable=%s, timeout=%f\n",
 			enable ? "TRUE" : "FALSE",
 			expiration);
 
@@ -159,16 +159,16 @@ void DriveSubsystem::EnableDriveSubsystem() {
 }
 
 void DriveSubsystem::ArcadeDrive(float y, float twist) {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveSubsystem::ArcadeDrive()->y = %f, twist=%f", y, twist);
+	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveSubsystem::ArcadeDrive()->y = %f, twist=%f", y, twist);
 
 	if (!InDriveMode())
 	{
-		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kERROR, "DriveSubsystem::ArcadeDrive called but NOT in drive mode. IGNORING!");
+		Logger::GetInstance()->Log(DrivingLogId, Logger::kERROR, "DriveSubsystem::ArcadeDrive called but NOT in drive mode. IGNORING!");
 		return;
 	}
 
 	if (overloadCondition) {
-		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kWARNING, "DriveSubsystem::ArcadeDrive called but in overload condition, y and twist reset to 0.0!");
+		Logger::GetInstance()->Log(DrivingLogId, Logger::kWARNING, "DriveSubsystem::ArcadeDrive called but in overload condition, y and twist reset to 0.0!");
 		twist = 0.0;
 		y = 0.0;
 	}
@@ -177,16 +177,16 @@ void DriveSubsystem::ArcadeDrive(float y, float twist) {
 }
 
 void DriveSubsystem::Climb(float y) {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveSubsystem::Climb()->y = %f", y);
+	Logger::GetInstance()->Log(ClimbingLogId, Logger::kTRACE, "DriveSubsystem::Climb()->y = %f", y);
 
 	if (!InClimbMode())
 	{
-		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kERROR, "DriveSubsystem::Climb called but NOT in climb mode. IGNORING!");
+		Logger::GetInstance()->Log(ClimbingLogId, Logger::kERROR, "DriveSubsystem::Climb called but NOT in climb mode. IGNORING!");
 		return;
 	}
 
 	if (overloadCondition) {
-		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kWARNING, "DriveSubsystem::Climb called but in overload condition, y reset to 0.0!");
+		Logger::GetInstance()->Log(ClimbingLogId, Logger::kWARNING, "DriveSubsystem::Climb called but in overload condition, y reset to 0.0!");
 		y = 0.0;
 	}
 

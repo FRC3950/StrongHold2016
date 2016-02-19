@@ -9,6 +9,8 @@
 #include "Commands/ToggleGearCommand.h"
 #include "Commands/ClimbCommand.h"
 #include "Commands/DriveSubsystemInteruptCommand.h"
+#include "Commands/VisionOnCommand.h"
+#include "Commands/VisionOffCommand.h"
 
 OI::OI() {
 	// Process operator interface input here.
@@ -31,16 +33,18 @@ OI::OI() {
 	ShiftGearButton.reset(new JoystickButton(joystick.get(),4));
 	PowerTakeOffButton.reset(new JoystickButton(joystick.get(),11));
 	ResetToDriveButton.reset(new JoystickButton(joystick.get(),12));
+	VisionOnButton.reset(new JoystickButton(joystick.get(),7));
+	VisionOffButton.reset(new JoystickButton(joystick.get(),8));
 
 	logger->Log(OIId, Logger::kTRACE, "OI::ctor Created Joystick Buttons");
 
 	//LaunchClimberButton->WhenPressed(new LaunchClimberCommand());
-	//ToggleHoodButton->WhenPressed(new ToggleShooterHoodCommand());
+	ToggleHoodButton->WhenPressed(new ToggleShooterHoodCommand());
 	//HomePosButton->WhenPressed(new ManipulatorSeekPosCommand(IntakeSubsystem::SeekManipulatorPos::Up));
 	//IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(IntakeSubsystem::SeekManipulatorPos::Intake));
 	//DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(IntakeSubsystem::SeekManipulatorPos::Down));
 	//ReadyShootButton->WhenPressed(new DashboardShootCommand());
-	//ShootButton->WhenPressed(new ShootCommandGroup());
+	ShootButton->WhenPressed(new ShootCommandGroup());
 	ShiftGearButton->WhenPressed(new ToggleGearCommand());
 	PowerTakeOffButton->WhenPressed(new ClimbCommand());
 	ResetToDriveButton->WhenPressed(new DriveSubsystemInteruptCommand());

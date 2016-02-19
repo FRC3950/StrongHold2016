@@ -70,12 +70,12 @@ void RobotMap::init(){
     climberSubsystemMotor.reset(new Victor(5));
 
     climberSubsystemLimitSwitch.reset(new DigitalInput());
+#endif
 
-    shooterSubsystemShooterCoverSolenoid.reset(new Solenoid(4));
+    shooterSubsystemShooterCoverSolenoid.reset(new Solenoid(2));
+
 
     shooterSubsystemShooterWheelTalon.reset(new CANTalon(0));
-
-#endif
 
     ahrs.reset(new AHRS(SPI::Port::kMXP));
 

@@ -50,7 +50,7 @@ void DriveCommand::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void DriveCommand::Execute()
 {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute Enter()");
+	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Execute Enter()");
 
 	if (!Robot::driveSubsystem->InDriveMode()) {
 		Robot::driveSubsystem->SetMode(DriveSubsystem::DrivingMode);
@@ -59,27 +59,27 @@ void DriveCommand::Execute()
 	float y = -Robot::oi->getJoystickY();
 	float twist = -Robot::oi->getjoystickTwist();
 
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute()Raw values: y=%f, twist=%f", y, twist);
+	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Execute()Raw values: y=%f, twist=%f", y, twist);
 
 	y = inRangeExclusive(y,Y_VAL_EPSILON_RANGE);
 	twist = inRangeExclusive(twist, TWIST_VAL_EPSILON_RANGE);
 
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute() After inRange y=%f, twist=%f", y, twist);
+	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Execute() After inRange y=%f, twist=%f", y, twist);
 
 	y *= JOYSTICK_Y_DEFAULT_MODIFIER;
 	twist *= JOYSTICK_TWIST_DEFAULT_MODIFIER;
 
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute() After Modifier y=%f, twist=%f", y, twist);
+	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Execute() After Modifier y=%f, twist=%f", y, twist);
 
 	y = ModifyJoystickValues(y,2.0f);
 	//twist = ModifyJoystickValues(twist,2.0f);
 
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute() After squaring y=%f, twist=%f", y, twist);
+	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Execute() After squaring y=%f, twist=%f", y, twist);
 
 	y = floorVal(y);
 	twist = floorVal(twist);
 
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Execute() After flooring y=%f, twist=%f", y, twist);
+	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Execute() After flooring y=%f, twist=%f", y, twist);
 
 	Robot::driveSubsystem->ArcadeDrive(y,twist);
 }
@@ -100,5 +100,5 @@ void DriveCommand::End()
 // subsystems is scheduled to run
 void DriveCommand::Interrupted()
 {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand::Interrupted() Enter");
+	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Interrupted() Enter");
 }
