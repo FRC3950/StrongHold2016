@@ -19,7 +19,7 @@ const unsigned int DriveMotorSafetyLogId    = 1U << 11; //0x00000800U;
 
 const unsigned int DriveSubsystemLogId = (DrivingLogId | ClimbingLogId | DriveMotorSafetyLogId);
 
-const unsigned int DefaultLoggingMask = (RobotLogId | ShooterSubsystemLogId | ConfigurationId | DriveSubsystemLogId | VisionTargetingId | GantrySubsystemLogId | IntakeSubsystemLogId);
+const unsigned int DefaultLoggingMask = (RobotLogId | ShooterSubsystemLogId | ConfigurationId | VisionTargetingId | GantrySubsystemLogId | IntakeSubsystemLogId);
 const Logger::MessageType DefaultLoggingLevel = Logger::kINFO;
 
 #endif

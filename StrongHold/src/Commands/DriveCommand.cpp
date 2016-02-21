@@ -3,12 +3,12 @@
 #include "../Robot.h"
 #include "../Subsystems/DriveSubsystem.h"
 #include <math.h>
+#include "../UtilFun.h"
+#include "JoystickConstants.h"
 namespace{
 	const float JOYSTICK_Y_DEFAULT_MODIFIER = 1.0f;
 	const float JOYSTICK_TWIST_DEFAULT_MODIFIER = .9f;
 
-	const float Y_VAL_EPSILON_RANGE = .02;
-	const float TWIST_VAL_EPSILON_RANGE = .02;
 
 	const float FLOOR = 0.001f; // do not set to zero
 
@@ -19,12 +19,12 @@ namespace{
 		}
 		return out;
 	}
-	float inRangeExclusive(float val, float range){
-		if (val < range && val > -range){
-			return 0;
-		}
-		return val;
-	}
+//	float inRangeExclusive(float val, float range){
+//		if (val < range && val > -range){
+//			return 0;
+//		}
+//		return val;
+//	}
 	float floorVal(float val){
 		if (val > 0.0 && val < FLOOR){
 			return FLOOR;
@@ -61,8 +61,8 @@ void DriveCommand::Execute()
 
 	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Execute()Raw values: y=%f, twist=%f", y, twist);
 
-	y = inRangeExclusive(y,Y_VAL_EPSILON_RANGE);
-	twist = inRangeExclusive(twist, TWIST_VAL_EPSILON_RANGE);
+	y = ZeroIfInRangeInclusive(y,-Y_VAL_EPSILON_RANGE,Y_VAL_EPSILON_RANGE);
+	twist = ZeroIfInRangeInclusive(twist, -TWIST_VAL_EPSILON_RANGE,TWIST_VAL_EPSILON_RANGE);
 
 	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Execute() After inRange y=%f, twist=%f", y, twist);
 

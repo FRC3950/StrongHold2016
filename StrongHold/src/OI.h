@@ -19,6 +19,9 @@ private:
 	std::shared_ptr<JoystickButton> ResetToDriveButton;
 	std::shared_ptr<JoystickButton> VisionOnButton;
 	std::shared_ptr<JoystickButton> VisionOffButton;
+	std::shared_ptr<JoystickButton> IntakeButton;
+	std::shared_ptr<JoystickButton> StopIntakeButton;
+	std::shared_ptr<JoystickButton> OuttakeButton;
 	//possibly add shoot buttons for different distances or just base it off vision.
 
 public:

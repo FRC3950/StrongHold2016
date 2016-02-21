@@ -76,16 +76,17 @@ void Robot::RobotInit()
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: After Drive Subsystem create");
 
 	#if NOT_YET
-	intakeSubsystem.reset(new IntakeSubsystem());
+
 	climberSubsystem.reset(new ClimberSubsystem());
 
 
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: Before Shooter Subsystem create");
-
+#endif
+	intakeSubsystem.reset(new IntakeSubsystem());
 	shooterSubsystem.reset(new ShooterSubsystem());
 
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: After Shooter Subsystem create");
-#endif
+
 
 	// This MUST be here. If the OI creates Commands (which it very likely
 	// will), constructing it during the construction of CommandBase (from
@@ -183,24 +184,24 @@ void Robot::MonitorMotorCurrents()
 {
 	Logger *logger = Logger::GetInstance();
 
-	logger->Log(RobotLogId, Logger::kTRACE, "OutputMotorCurrents:: Entered");
+	logger->Log(TemporaryLogId, Logger::kTRACE, "OutputMotorCurrents:: Entered");
 
 	DriveMotorCurrents currents = getDriveMotorCurrents();
 
-	logger->Log(RobotLogId, Logger::kTRACE, "Back from call to getDriveMotorCurrents");
+	logger->Log(TemporaryLogId, Logger::kTRACE, "Back from call to getDriveMotorCurrents");
 
 	driveSubsystem->AvgNewMotorCurrents(currents);
 
-	logger->Log(RobotLogId, Logger::kTRACE, "Back from call to driveSubsyste->AvgNewMotorCurrents");
+	logger->Log(TemporaryLogId, Logger::kTRACE, "Back from call to driveSubsyste->AvgNewMotorCurrents");
 
 	SmartDashboard::PutNumber("Front Left Drive Motor", currents.getCurrent(DriveMotorCurrents::frontLeft));
 	SmartDashboard::PutNumber("Front Right Drive Motor", currents.getCurrent(DriveMotorCurrents::frontRight));
 	SmartDashboard::PutNumber("Back Left Drive Motor", currents.getCurrent(DriveMotorCurrents::backLeft));
 	SmartDashboard::PutNumber("Back Right Drive Motor", currents.getCurrent(DriveMotorCurrents::backRight));
-	logger->Log(RobotLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 1: %g",currents.getCurrent(DriveMotorCurrents::frontLeft));
-	logger->Log(RobotLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 2: %g",currents.getCurrent(DriveMotorCurrents::frontRight));
-	logger->Log(RobotLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 3: %g",currents.getCurrent(DriveMotorCurrents::backLeft));
-	logger->Log(RobotLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 4: %g",currents.getCurrent(DriveMotorCurrents::backRight));
+	logger->Log(TemporaryLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 1: %g",currents.getCurrent(DriveMotorCurrents::frontLeft));
+	logger->Log(TemporaryLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 2: %g",currents.getCurrent(DriveMotorCurrents::frontRight));
+	logger->Log(TemporaryLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 3: %g",currents.getCurrent(DriveMotorCurrents::backLeft));
+	logger->Log(TemporaryLogId, Logger::kTRACE, "MonitorMotorCurrents:: motor 4: %g",currents.getCurrent(DriveMotorCurrents::backRight));
 
 	bool goodCurrent = true;
 	if (currents.getCurrent(DriveMotorCurrents::frontLeft) > DriveVictorMaxCurrent ||
@@ -212,16 +213,16 @@ void Robot::MonitorMotorCurrents()
 	}
 	SmartDashboard::PutString("Drive Motor Current", goodCurrent ? "NORMAL" : "OVERLOADED");
 
-	logger->Log(RobotLogId, Logger::kTRACE, "OutputMotorCurrents:: Exit");
+	logger->Log(TemporaryLogId, Logger::kTRACE, "OutputMotorCurrents:: Exit");
 }
 void Robot::OutputNavxData()
 {
-	Logger *logger = Logger::GetInstance();
+//	Logger *logger = Logger::GetInstance();
 
 //	logger->Log(RobotLogId, Logger::kTRACE, "OutputNavxData:: Entered");
 
 	 if ( !ahrs ) {
-		 logger->Log(RobotLogId, Logger::kTRACE, "OutputNavxData:: ahrs doesn't exist.  Exiting!");
+//		 logger->Log(RobotLogId, Logger::kTRACE, "OutputNavxData:: ahrs doesn't exist.  Exiting!");
 		 return;
 	 }
 

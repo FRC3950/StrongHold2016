@@ -17,7 +17,7 @@ std::shared_ptr<Victor> RobotMap::driveSubsystemVictor4;
 std::shared_ptr<RobotDrive> RobotMap::driveSubsystemRobotDrive41;
 std::shared_ptr<Solenoid> RobotMap::driveSubsystemShifterSolenoid;
 std::shared_ptr<Solenoid> RobotMap::driveSubsystemPowerTakeOffSolenoid;
-std::shared_ptr<Victor> RobotMap::intakeSubsystemRollerVictor;
+std::shared_ptr<Talon> RobotMap::intakeSubsystemRollerVictor;
 std::shared_ptr<CANTalon> RobotMap::intakeSubsystemManipulatorMotor;
 std::shared_ptr<DigitalInput> RobotMap::intakeSubsystemUpperLimitSwitch;
 std::shared_ptr<AnalogInput> RobotMap::intakeSubsystemPhotoSensor;
@@ -26,7 +26,7 @@ std::shared_ptr<CANTalon> RobotMap::uptakeSubsystemIndexerTalon;
 std::shared_ptr<Solenoid> RobotMap::shooterSubsystemShooterCoverSolenoid;
 //std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid1;
 //std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid2;
-std::shared_ptr<Victor> RobotMap::climberSubsystemMotor;
+std::shared_ptr<Talon> RobotMap::climberSubsystemMotor;
 std::shared_ptr<DigitalInput> RobotMap::climberSubsystemLimitSwitch;
 std::shared_ptr<AHRS> RobotMap::ahrs;
 std::shared_ptr<PowerDistributionPanel> RobotMap::pdp;
@@ -54,11 +54,14 @@ void RobotMap::init(){
 
     driveSubsystemPowerTakeOffSolenoid.reset(new Solenoid(1));
 
-    #if NOT_YET
-    intakeSubsystemRollerVictor.reset(new Victor(4));
 
-    intakeSubsystemManipulatorMotor.reset(new CANTalon(5));
+    intakeSubsystemRollerVictor.reset(new Talon(5));
 
+    intakeSubsystemManipulatorMotor.reset(new CANTalon(1));
+
+    intakeSubsystemPhotoSensor.reset(new AnalogInput(0));
+
+#if NOT_YET
     intakeSubsystemUpperLimitSwitch.reset(new DigitalInput(0));
 
     uptakeSubsystemIndexerTalon.reset(new CANTalon(1));
@@ -67,9 +70,9 @@ void RobotMap::init(){
 //
 //	climberSubsystemSolenoid2.reset(new Solenoid(3));
 
-    climberSubsystemMotor.reset(new Victor(5));
+    climberSubsystemMotor.reset(new Talon(5));
 
-    climberSubsystemLimitSwitch.reset(new DigitalInput());
+    climberSubsystemLimitSwitch.reset(new DigitalInput(1));
 #endif
 
     shooterSubsystemShooterCoverSolenoid.reset(new Solenoid(2));
@@ -77,7 +80,7 @@ void RobotMap::init(){
 
     shooterSubsystemShooterWheelTalon.reset(new CANTalon(0));
 
-    ahrs.reset(new AHRS(SPI::Port::kMXP));
+    //ahrs.reset(new AHRS(SPI::Port::kMXP));
 
     pdp.reset(new PowerDistributionPanel(0));
 

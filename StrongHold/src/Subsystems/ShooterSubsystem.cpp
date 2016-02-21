@@ -15,11 +15,11 @@ namespace {
 	double ShooterWheelRotsPerSecEpsilon = SHOOTER_WHEEL_ROTS_PER_SEC_EPSILON_DEFAULT;
 	double ShooterMotorCountsPerSecEpsilon = 0;
 
-	const double CLIMBER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT = 0.01;
-	double ShooterMotorSmallErrorSmoothingFactor = CLIMBER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT;
+	const double SHOOTER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT = 0.01;
+	double ShooterMotorSmallErrorSmoothingFactor = SHOOTER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT;
 
-	const double CLIMBER_MOTOR_LARGE_ERROR_SMOOTHING_FACTOR_DEFAULT = .50;
-	double ShooterMotorLargeErrorSmoothingFactor = CLIMBER_MOTOR_LARGE_ERROR_SMOOTHING_FACTOR_DEFAULT;
+	const double SHOOTER_MOTOR_LARGE_ERROR_SMOOTHING_FACTOR_DEFAULT = .50;
+	double ShooterMotorLargeErrorSmoothingFactor = SHOOTER_MOTOR_LARGE_ERROR_SMOOTHING_FACTOR_DEFAULT;
 
 	inline double ConvertRotationstoCounts(double rotations) {
 		return rotations * CONVERSION_RATIO_ROTATIONS_TO_COUNTS;
@@ -56,8 +56,8 @@ namespace {
 	    	ShooterWheelRotsPerSecEpsilon = configMgr->getDoubleVal(ConfigKeys::Shooter_RotsPerSecEpsilonKey, SHOOTER_WHEEL_ROTS_PER_SEC_EPSILON_DEFAULT);
 	    	ShooterMotorCountsPerSecEpsilon = ConvertRotationstoCounts(ShooterWheelRotsPerSecEpsilon);
 
-	    	ShooterMotorLargeErrorSmoothingFactor = configMgr->getDoubleVal(ConfigKeys::Shooter_LargeErrorSmoothingFactorKey, CLIMBER_MOTOR_LARGE_ERROR_SMOOTHING_FACTOR_DEFAULT);
-	    	ShooterMotorSmallErrorSmoothingFactor = configMgr->getDoubleVal(ConfigKeys::Shooter_SmallErrorSmoothingFactorKey, CLIMBER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT);
+	    	ShooterMotorLargeErrorSmoothingFactor = configMgr->getDoubleVal(ConfigKeys::Shooter_LargeErrorSmoothingFactorKey, SHOOTER_MOTOR_LARGE_ERROR_SMOOTHING_FACTOR_DEFAULT);
+	    	ShooterMotorSmallErrorSmoothingFactor = configMgr->getDoubleVal(ConfigKeys::Shooter_SmallErrorSmoothingFactorKey, SHOOTER_MOTOR_SMALL_ERROR_SMOOTHING_FACTOR_DEFAULT);
 
 
 			Logger* logger = Logger::GetInstance();
@@ -71,7 +71,7 @@ namespace {
 	}
 }
 
-const float ShooterSubsystem::MinRotationsPerSec = 10.0f;
+const float ShooterSubsystem::MinRotationsPerSec = 5.0f;
 const float ShooterSubsystem::MaxRotationsPerSec = 500.0f;
 
 ShooterSubsystem::ShooterSubsystem() :
@@ -200,7 +200,7 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 
 	double error = 1.0 - ratio;
 
-	double currVoltage = shooterMotor->Get();
+	double currVoltage = fabs(shooterMotor->Get());
 
 	double smoothingFactor = ShooterMotorSmallErrorSmoothingFactor;
 
@@ -215,6 +215,8 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 	else {
 		newVoltage = newVoltage <= SHOOTER_VOLTAGE_DEFAULT ? newVoltage : SHOOTER_VOLTAGE_DEFAULT;
 	}
+
+	newVoltage = -newVoltage;
 
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "New Voltage = %g Before Capping",
 			    newVoltage);

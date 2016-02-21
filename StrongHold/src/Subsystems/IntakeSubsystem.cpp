@@ -41,7 +41,11 @@ IntakeSubsystem::IntakeSubsystem() :
 	intakeMotor = RobotMap::intakeSubsystemRollerVictor;
 	manipulatorMotor = RobotMap::intakeSubsystemManipulatorMotor;
 	photoSensor = RobotMap::intakeSubsystemPhotoSensor;
+
+#if UPPER_LIMIT_SWITCH
 	upperLimitSwitch = RobotMap::intakeSubsystemUpperLimitSwitch;
+#endif
+	FindHomePosition(true);
 }
 
 void IntakeSubsystem::InitDefaultCommand()
@@ -56,15 +60,20 @@ void IntakeSubsystem::InitDefaultCommand()
 
 bool IntakeSubsystem::CheckUpperLimitSwitch()
 {
-	uint32_t switchState = upperLimitSwitch->Get();
-	// This assumes the limit switch is normally closed
-	// and reading non-zero
-	// When it reads zero, the switch is open, indicating the limit was hit.
-	bool limitHit = (switchState == 0) ? false : true;
+	bool limitHit = false;
 
-	if (limitHit)
-	{
-		Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kWARNING, "*** Intake Upper Limit Switch Hit ***");
+	if (upperLimitSwitch) {
+		uint32_t switchState = upperLimitSwitch->Get();
+		// This assumes the limit switch is normally closed
+		// and reading non-zero
+		// When it reads zero, the switch is open, indicating the limit was hit.
+		limitHit = (switchState == 0) ? false : true;
+
+		if (limitHit)
+		{
+			Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kWARNING, "*** Intake Upper Limit Switch Hit ***");
+
+		}
 	}
 
 	return limitHit;
@@ -75,7 +84,7 @@ const float DOWN_MANIPULATOR_SPEED = 0.5;
 
 const float HOME_POS_FINDING_SPEED = UP_MANIPULATOR_SPEED;
 
-void IntakeSubsystem::findHomePosition(bool forceFind) {
+void IntakeSubsystem::FindHomePosition(bool forceFind) {
 
 	// Check to see if the pot floor has already been
 	// found.  Don't check for it again.
@@ -83,10 +92,12 @@ void IntakeSubsystem::findHomePosition(bool forceFind) {
 		return;
 	}
 
-	if (!CheckUpperLimitSwitch()) {
-		manipulatorMotor->Set(HOME_POS_FINDING_SPEED);
-		while (!CheckUpperLimitSwitch()) {
-//                System.out.println("Moving the shooter down.");
+	if (upperLimitSwitch) {
+		if (!CheckUpperLimitSwitch()) {
+			manipulatorMotor->Set(HOME_POS_FINDING_SPEED);
+			while (!CheckUpperLimitSwitch()) {
+	//                System.out.println("Moving the shooter down.");
+			}
 		}
 	}
 
@@ -99,12 +110,18 @@ void IntakeSubsystem::findHomePosition(bool forceFind) {
 void IntakeSubsystem::SetIntakeMotor(IntakeDirection id) {
 	float speed = 0.0f;
 
+	Logger *logger = Logger::GetInstance();
+
+	logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeSubsystem::SetIntakeMotor: Direction=%d", id);
+
 	if (id == IntakeDirection::In){
 		speed = -1.0f;
 	}
 	else if (id == IntakeDirection::Out) {
 		speed = 1.0f;
 	}
+
+	logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeSubsystem::SetIntakeMotor: speed = %f", speed);
 
 	intakeMotor->Set(speed);
 }

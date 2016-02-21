@@ -1,6 +1,8 @@
 #include <Commands/ClimbCommand.h>
 #include "../Robot.h"
 #include "../Logging.h"
+#include "JoystickConstants.h"
+#include "../UtilFun.h"
 
 
 ClimbCommand::ClimbCommand()
@@ -23,6 +25,8 @@ void ClimbCommand::Execute()
 		Robot::driveSubsystem->SetMode(DriveSubsystem::ClimbingMode);
 	}
 	float y = Robot::oi->getJoystickY();
+
+	y = ZeroIfInRangeInclusive(y,-Y_VAL_EPSILON_RANGE,Y_VAL_EPSILON_RANGE);
 	Robot::driveSubsystem->Climb(y);
 }
 
