@@ -30,6 +30,12 @@ void IntakeCommand::Execute()
 // Make this return true when this Command no longer needs to run execute()
 bool IntakeCommand::IsFinished()
 {
+	// because the Outtake Command is the default for the subsystem but
+	// we want to be able to stop this command when we want to outtake
+	if (Robot::oi->getOuttakeTrigger()) {
+		return true;
+	}
+
 	switch (currState) {
 	case Init:
 		return false;

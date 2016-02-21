@@ -31,6 +31,7 @@ public:
 	float getjoystickTwist();
 
 	float getManipulatorSpeed();
+	bool getOuttakeTrigger();
 };
 
 #endif

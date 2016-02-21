@@ -22,7 +22,12 @@ void OuttakeCommand::Initialize()
 void OuttakeCommand::Execute()
 {
 	Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kTRACE, "OuttakeCommand::Execute");
-	Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Out);
+	if (Robot::oi->getOuttakeTrigger()){
+		Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Out);
+	}
+	else {
+		Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Neutral);
+	}
 
 }
 

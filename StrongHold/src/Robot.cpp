@@ -18,6 +18,7 @@ std::shared_ptr<ShooterSubsystem> Robot::shooterSubsystem;
 std::shared_ptr<PowerDistributionPanel> Robot::pdp;
 std::unique_ptr<OI> Robot::oi;
 std::shared_ptr<VisionSubsystem> Robot::visionSubsystem;
+std::shared_ptr<ManipulatorSubsystem> Robot::manipulatorSubsystem;
 
 
 namespace
@@ -79,14 +80,17 @@ void Robot::RobotInit()
 
 	climberSubsystem.reset(new ClimberSubsystem());
 
+#endif
 
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: Before Shooter Subsystem create");
-#endif
 	intakeSubsystem.reset(new IntakeSubsystem());
 	shooterSubsystem.reset(new ShooterSubsystem());
+	manipulatorSubsystem.reset(new ManipulatorSubsystem());
 
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: After Shooter Subsystem create");
 
+
+	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: Creating OI");
 
 	// This MUST be here. If the OI creates Commands (which it very likely
 	// will), constructing it during the construction of CommandBase (from

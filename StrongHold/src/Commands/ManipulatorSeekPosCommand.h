@@ -3,15 +3,15 @@
 
 #include "../CommandBase.h"
 #include "WPILib.h"
-#include "../Subsystems/IntakeSubsystem.h"
+#include "../Subsystems/ManipulatorSubsystem.h"
 
 class ManipulatorSeekPosCommand: public CommandBase
 {
 private:
 	bool hasInitalized = false;
-	IntakeSubsystem::SeekManipulatorPos targetPos;
+	ManipulatorSubsystem::SeekManipulatorPos targetPos;
 public:
-	ManipulatorSeekPosCommand(IntakeSubsystem::SeekManipulatorPos pos);
+	ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos pos);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

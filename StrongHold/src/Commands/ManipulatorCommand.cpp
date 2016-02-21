@@ -3,14 +3,14 @@
 #include "../UtilFun.h"
 
 namespace {
-	float joyStickPositiveEpsilon = 0.5;
-	float joyStickNegitiveEpsilon = -0.5;
+	float joyStickPositiveEpsilon = 0.3;
+	float joyStickNegitiveEpsilon = -0.3;
 
 }
 ManipulatorCommand::ManipulatorCommand()
 {
 	// Use Requires() here to declare subsystem dependencies
-	Requires(Robot::intakeSubsystem.get());
+	Requires(Robot::manipulatorSubsystem.get());
 }
 
 // Called just before this Command runs the first time
@@ -23,7 +23,7 @@ void ManipulatorCommand::Initialize()
 void ManipulatorCommand::Execute()
 {
 	float y = Robot::oi->getManipulatorSpeed();
-	Robot::intakeSubsystem->MoveManipulator(ZeroIfInRangeInclusive(y,joyStickPositiveEpsilon,joyStickNegitiveEpsilon));
+	Robot::manipulatorSubsystem->MoveManipulator(ZeroIfInRangeInclusive(y,joyStickPositiveEpsilon,joyStickNegitiveEpsilon));
 
 }
 

@@ -1,11 +1,18 @@
 #include "ManipulatorSeekPosCommand.h"
 #include "Robot.h"
+#include "Logging.h"
 
-ManipulatorSeekPosCommand::ManipulatorSeekPosCommand(IntakeSubsystem::SeekManipulatorPos pos)
+ManipulatorSeekPosCommand::ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos pos)
 {
+	Logger *logger = Logger::GetInstance();
+
+	logger->Log(OIId, Logger::kTRACE, "ManipulatorSeekPosCommand::ctor Created Joystick Buttons");
+
 	// Use Requires() here to declare subsystem dependencies
-	Requires(Robot::intakeSubsystem.get());
+	Requires(Robot::manipulatorSubsystem.get());
 	targetPos = pos;
+
+	logger->Log(OIId, Logger::kTRACE, "ManipulatorSeekPosCommand::ctor Created Joystick Buttons");
 }
 
 // Called just before this Command runs the first time
@@ -18,7 +25,7 @@ void ManipulatorSeekPosCommand::Initialize()
 void ManipulatorSeekPosCommand::Execute()
 {
 	if (!hasInitalized){
-		Robot::intakeSubsystem->SetManipulatorSeekPosition(targetPos);
+		Robot::manipulatorSubsystem->SetManipulatorSeekPosition(targetPos);
 		hasInitalized = true;
 	}
 
@@ -28,7 +35,7 @@ void ManipulatorSeekPosCommand::Execute()
 // Make this return true when this Command no longer needs to run execute()
 bool ManipulatorSeekPosCommand::IsFinished()
 {
-	return Robot::intakeSubsystem->hasManipulatorReachedPos();
+	return Robot::manipulatorSubsystem->hasManipulatorReachedPos();
 }
 
 // Called once after isFinished returns true
@@ -42,7 +49,7 @@ void ManipulatorSeekPosCommand::End()
 void ManipulatorSeekPosCommand::Interrupted()
 {
 	if (hasInitalized){
-		Robot::intakeSubsystem->cancelManipulatorSeek();
+		Robot::manipulatorSubsystem->cancelManipulatorSeek();
 		hasInitalized = false;
 	}
 }

@@ -17,10 +17,11 @@
 
 OI::OI() {
 	// Process operator interface input here.
-	Logger *logger = Logger::GetInstance(true, true);
+	Logger *logger = Logger::GetInstance();
 
 	logger->Log(OIId, Logger::kTRACE, "OI::ctor Entering");
 
+#if 1
 	joystick.reset(new Joystick(0));
 	xBoxControler.reset(new Joystick(1));
 
@@ -41,23 +42,27 @@ OI::OI() {
 	ResetToDriveButton.reset(new JoystickButton(joystick.get(),12));
 //	VisionOnButton.reset(new JoystickButton(joystick.get(),7));
 //	VisionOffButton.reset(new JoystickButton(joystick.get(),8));
-
+#endif
 	logger->Log(OIId, Logger::kTRACE, "OI::ctor Created Joystick Buttons");
 
+	//IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Intake));
+
+	logger->Log(OIId, Logger::kTRACE, "OI::ctor Intake Command assigned.");
+
+#if 1
 	//LaunchClimberButton->WhenPressed(new LaunchClimberCommand());
-	//ToggleHoodButton->WhenPressed(new ToggleShooterHoodCommand());
-	//HomePosButton->WhenPressed(new ManipulatorSeekPosCommand(IntakeSubsystem::SeekManipulatorPos::Up));
-	IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(IntakeSubsystem::SeekManipulatorPos::Intake));
-	//DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(IntakeSubsystem::SeekManipulatorPos::Down));
+	ToggleHoodButton->WhenPressed(new ToggleShooterHoodCommand());
+	//HomePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Up));
+	//DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Down));
 	ReadyShootButton->WhenPressed(new DashboardShootCommand());
 	ShootButton->WhenPressed(new ShootCommandGroup());
 	ShiftGearButton->WhenPressed(new ToggleGearCommand());
 	PowerTakeOffButton->WhenPressed(new ClimbCommand());
 	ResetToDriveButton->WhenPressed(new DriveSubsystemInteruptCommand());
 	IntakeButton->WhenPressed(new IntakeCommand());
-	StopIntakeButton->WhenPressed(new StopIntakeCommand());
-	OuttakeButton->WhenPressed(new OuttakeCommand());
-
+//	StopIntakeButton->WhenPressed(new StopIntakeCommand());
+//	OuttakeButton->WhenPressed(new OuttakeCommand());
+#endif
 
 	logger->Log(OIId, Logger::kTRACE, "OI::ctor Assigned Commands to Joystick Buttons");
 
@@ -77,4 +82,7 @@ float OI::getjoystickTwist(){
 }
 float OI::getManipulatorSpeed(){
 	return xBoxControler->GetAxis(Joystick::AxisType::kYAxis);
+}
+bool OI::getOuttakeTrigger() {
+	return xBoxControler->GetAxis(Joystick::AxisType::kThrottleAxis) > .5f;
 }
