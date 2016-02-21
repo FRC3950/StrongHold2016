@@ -75,7 +75,7 @@ const float ShooterSubsystem::MinRotationsPerSec = 5.0f;
 const float ShooterSubsystem::MaxRotationsPerSec = 500.0f;
 
 ShooterSubsystem::ShooterSubsystem() :
-		Subsystem("ExampleSubsystem")
+		Subsystem("ShooterSubsystem")
 {
 	hoodSolenoid = RobotMap::shooterSubsystemShooterCoverSolenoid;
 	shooterMotor = RobotMap::shooterSubsystemShooterWheelTalon;

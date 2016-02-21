@@ -6,13 +6,13 @@ ManipulatorSeekPosCommand::ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekM
 {
 	Logger *logger = Logger::GetInstance();
 
-	logger->Log(OIId, Logger::kTRACE, "ManipulatorSeekPosCommand::ctor Created Joystick Buttons");
+	logger->Log(ManipulatorLogId, Logger::kTRACE, "ManipulatorSeekPosCommand::ctor Created Joystick Buttons");
 
 	// Use Requires() here to declare subsystem dependencies
 	Requires(Robot::manipulatorSubsystem.get());
 	targetPos = pos;
 
-	logger->Log(OIId, Logger::kTRACE, "ManipulatorSeekPosCommand::ctor Created Joystick Buttons");
+	logger->Log(ManipulatorLogId, Logger::kTRACE, "ManipulatorSeekPosCommand::ctor Created Joystick Buttons");
 }
 
 // Called just before this Command runs the first time

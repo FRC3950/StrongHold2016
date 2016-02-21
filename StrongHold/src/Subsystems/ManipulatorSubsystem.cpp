@@ -28,7 +28,7 @@ namespace {
 	};
 }
 ManipulatorSubsystem::ManipulatorSubsystem() :
-		Subsystem("ExampleSubsystem")
+		Subsystem("ManipulatorSubsystem")
 {
 	manipulatorMotor = RobotMap::intakeSubsystemManipulatorMotor;
 #if UPPER_LIMIT_SWITCH

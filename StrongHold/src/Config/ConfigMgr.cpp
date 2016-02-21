@@ -111,32 +111,32 @@ ConfigMgr::ConfigMgr(ConfigFileReader &configFileReader)
         	switch (value.getType())
         	{
         	case Variant::None:       // Variant isn't storing anything.
-        		logger->Log(ConfigurationId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with value None.\n",
+        		logger->Log(ConfigurationLogId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with value None.\n",
         				    itemName.c_str());
         		break;
 
         	case Variant::Bool:       // Variant is storing a boolean.
-        		logger->Log(ConfigurationId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with type Bool, Value=%s.\n",
+        		logger->Log(ConfigurationLogId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with type Bool, Value=%s.\n",
         				    itemName.c_str(), value.getBool() ? "TRUE" : "FALSE");
         		break;
 
         	case Variant::Int:        // Variant is storing an int.
-        		logger->Log(ConfigurationId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with type Int, Value=%d.\n",
+        		logger->Log(ConfigurationLogId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with type Int, Value=%d.\n",
         				    itemName.c_str(), value.getInt());
         		break;
 
         	case Variant::Double:     // Variant is storing a double.
-        		logger->Log(ConfigurationId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with type Double, Value=%g.\n",
+        		logger->Log(ConfigurationLogId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with type Double, Value=%g.\n",
         				    itemName.c_str(), value.getDouble());
         		break;
 
         	case Variant::String:     // Variant is storing a string.
-        		logger->Log(ConfigurationId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with type String, Value=\"%s\".\n",
+        		logger->Log(ConfigurationLogId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with type String, Value=\"%s\".\n",
         				    itemName.c_str(), value.getString().c_str());
         		break;
 
         	default:
-        		logger->Log(ConfigurationId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with unknown type.\n",
+        		logger->Log(ConfigurationLogId, Logger::kTRACE, "ConfigMgr: Adding variant named \"%s\" with unknown type.\n",
         				    itemName.c_str());
         		break;
         	}

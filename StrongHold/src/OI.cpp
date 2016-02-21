@@ -19,13 +19,13 @@ OI::OI() {
 	// Process operator interface input here.
 	Logger *logger = Logger::GetInstance();
 
-	logger->Log(OIId, Logger::kTRACE, "OI::ctor Entering");
+	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Entering");
 
 #if 1
 	joystick.reset(new Joystick(0));
 	xBoxControler.reset(new Joystick(1));
 
-	logger->Log(OIId, Logger::kTRACE, "OI::ctor Created Joysticks");
+	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Created Joysticks");
 
 	LaunchClimberButton.reset(new JoystickButton(xBoxControler.get(),0));
 	ToggleHoodButton.reset(new JoystickButton(xBoxControler.get(),3));
@@ -43,11 +43,11 @@ OI::OI() {
 //	VisionOnButton.reset(new JoystickButton(joystick.get(),7));
 //	VisionOffButton.reset(new JoystickButton(joystick.get(),8));
 #endif
-	logger->Log(OIId, Logger::kTRACE, "OI::ctor Created Joystick Buttons");
+	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Created Joystick Buttons");
 
 	//IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Intake));
 
-	logger->Log(OIId, Logger::kTRACE, "OI::ctor Intake Command assigned.");
+	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Intake Command assigned.");
 
 #if 1
 	//LaunchClimberButton->WhenPressed(new LaunchClimberCommand());
@@ -64,9 +64,9 @@ OI::OI() {
 //	OuttakeButton->WhenPressed(new OuttakeCommand());
 #endif
 
-	logger->Log(OIId, Logger::kTRACE, "OI::ctor Assigned Commands to Joystick Buttons");
+	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Assigned Commands to Joystick Buttons");
 
-	logger->Log(OIId, Logger::kTRACE, "OI::ctor Exiting");
+	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Exiting");
 }
 
 float OI::getJoystickX(){

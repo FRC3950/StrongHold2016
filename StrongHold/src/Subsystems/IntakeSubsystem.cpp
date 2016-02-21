@@ -16,7 +16,7 @@ namespace {
 }
 
 IntakeSubsystem::IntakeSubsystem() :
-		Subsystem("ExampleSubsystem")
+		Subsystem("IntakeSubsystem")
 {
 	intakeMotor = RobotMap::intakeSubsystemRollerVictor;
 	photoSensor = RobotMap::intakeSubsystemPhotoSensor;

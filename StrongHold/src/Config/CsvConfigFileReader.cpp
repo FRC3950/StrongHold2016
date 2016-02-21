@@ -336,7 +336,7 @@ bool CsvConfigFileReader::getNextConfigItem(std::string &itemName, Variant &valu
     if (state == Done)
     {
 
-    	Logger::GetInstance()->Log(ConfigurationId, Logger::kTRACE, "CSVConfigFileReader: Parsed Line into \"%s\", \"%s\", \"%s\"",
+    	Logger::GetInstance()->Log(ConfigurationLogId, Logger::kTRACE, "CSVConfigFileReader: Parsed Line into \"%s\", \"%s\", \"%s\"",
     			                   tokens[0].c_str(), tokens[1].c_str(), tokens[2].c_str());
 
         setVariantFromData(value,

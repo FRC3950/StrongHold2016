@@ -2,7 +2,7 @@
 #include "../RobotMap.h"
 
 VisionSubsystem::VisionSubsystem() :
-		Subsystem("ExampleSubsystem")
+		Subsystem("VisionSubsystem")
 {
 	acquireImaq = false;
 
