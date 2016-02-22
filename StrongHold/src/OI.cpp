@@ -32,11 +32,11 @@ OI::OI() {
 	//HomePosButton.reset(new JoystickButton(xBoxControler.get(),2));
 	//IntakePosButton.reset(new JoystickButton(xBoxControler.get(),3));
 	//DownPosButton.reset(new JoystickButton(xBoxControler.get(),4));
-	ReadyShootButton.reset(new JoystickButton(xBoxControler.get(),5));
+	ReadyShootButton.reset(new JoystickButton(xBoxControler.get(),1));
 	ShootButton.reset(new JoystickButton(xBoxControler.get(),6));
-	IntakeButton.reset(new JoystickButton(xBoxControler.get(),1));
-	StopIntakeButton.reset(new JoystickButton(xBoxControler.get(),2));
-	OuttakeButton.reset(new JoystickButton(xBoxControler.get(),4));
+	IntakeButton.reset(new JoystickButton(xBoxControler.get(),5));
+	//StopIntakeButton.reset(new JoystickButton(xBoxControler.get(),2));
+	//OuttakeButton.reset(new JoystickButton(xBoxControler.get(),4));
 	ShiftGearButton.reset(new JoystickButton(joystick.get(),4));
 	PowerTakeOffButton.reset(new JoystickButton(joystick.get(),11));
 	ResetToDriveButton.reset(new JoystickButton(joystick.get(),12));
