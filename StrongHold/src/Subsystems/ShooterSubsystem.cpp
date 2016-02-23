@@ -137,10 +137,11 @@ void ShooterSubsystem::SetTargetSpeed(float rotsPerSec){
 	}
 
 	shooterMotor->SetPosition(0.0);
-	Wait(0.5);
+	Wait(0.25);
 	targetCountsPerSec = ConvertRotationstoCounts(rotsPerSec);
 	lastCountsReadTime = Timer::GetFPGATimestamp();
 	lastCounts = 0.0;//fabs(shooterMotor->GetPosition());
+	startShooterSpinupTime = lastCountsReadTime;
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Target Counts per second: %g", targetCountsPerSec);
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Epsilon - %g", ShooterMotorCountsPerSecEpsilon);
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "last count read time: %g", lastCountsReadTime);
@@ -190,8 +191,8 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 
 	if (InRange(currSpeed, targetCountsPerSec, ShooterMotorCountsPerSecEpsilon))
 	{
-		logger->Log(ShooterSubsystemLogId, Logger::kINFO, "Hit Target Speed: currSpeed=%g, targetCountsPerSec=%g, epsilon=%g Returning True.",
-				    currSpeed, targetCountsPerSec, ShooterMotorCountsPerSecEpsilon);
+		logger->Log(ShooterSubsystemLogId, Logger::kINFO, "Hit Target Speed: currSpeed=%g, targetCountsPerSec=%g, timeTaken=%g secs, epsilon=%g Returning True.",
+				    currSpeed, targetCountsPerSec, currTime - startShooterSpinupTime, ShooterMotorCountsPerSecEpsilon);
 
 		return true;
 	}

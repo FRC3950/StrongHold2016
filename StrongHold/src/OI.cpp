@@ -40,8 +40,8 @@ OI::OI() {
 	ShiftGearButton.reset(new JoystickButton(joystick.get(),4));
 	PowerTakeOffButton.reset(new JoystickButton(joystick.get(),11));
 	ResetToDriveButton.reset(new JoystickButton(joystick.get(),12));
-//	VisionOnButton.reset(new JoystickButton(joystick.get(),7));
-//	VisionOffButton.reset(new JoystickButton(joystick.get(),8));
+	VisionOnButton.reset(new JoystickButton(joystick.get(),7));
+	VisionOffButton.reset(new JoystickButton(joystick.get(),8));
 #endif
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Created Joystick Buttons");
 
@@ -62,6 +62,8 @@ OI::OI() {
 	IntakeButton->WhenPressed(new IntakeCommand());
 //	StopIntakeButton->WhenPressed(new StopIntakeCommand());
 //	OuttakeButton->WhenPressed(new OuttakeCommand());
+	VisionOnButton->WhenPressed(new VisionOnCommand());
+	VisionOffButton->WhenPressed(new VisionOffCommand());
 #endif
 
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Assigned Commands to Joystick Buttons");

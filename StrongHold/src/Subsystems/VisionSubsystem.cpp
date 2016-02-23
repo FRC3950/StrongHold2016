@@ -35,7 +35,7 @@ void VisionSubsystem::On()
 
     // grab an image, draw the circle, and provide it for the camera server which will
     // in turn send it to the dashboard.
-//	while(acquireImaq) {
+	//while(acquireImaq) {
 		IMAQdxGrab(session, frame, true, NULL);
 		if(imaqError != IMAQdxErrorSuccess) {
 			DriverStation::ReportError("IMAQdxGrab error: " + std::to_string((long)imaqError) + "\n");
@@ -43,14 +43,14 @@ void VisionSubsystem::On()
 //			imaqDrawShapeOnImage(frame, frame, { 10, 10, 100, 100 }, DrawMode::IMAQ_DRAW_VALUE, ShapeMode::IMAQ_SHAPE_OVAL, 0.0f);
 			CameraServer::GetInstance()->SetImage(frame);
 		}
-//		Wait(0.005);				// wait for a motor update time
-//	}
+		//Wait(0.005);				// wait for a motor update time
+	//}
 }
 
 void VisionSubsystem::Off()
 {
 	acquireImaq = false;
-	DriverStation::ReportError("I am in VisionSubsystem::Off()\n");
+	//DriverStation::ReportError("I am in VisionSubsystem::Off()\n");
 
     // stop image acquisition
 	IMAQdxStopAcquisition(session);

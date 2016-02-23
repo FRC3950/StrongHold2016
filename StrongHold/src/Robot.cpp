@@ -86,6 +86,7 @@ void Robot::RobotInit()
 	intakeSubsystem.reset(new IntakeSubsystem());
 	shooterSubsystem.reset(new ShooterSubsystem());
 	manipulatorSubsystem.reset(new ManipulatorSubsystem());
+	visionSubsystem.reset(new VisionSubsystem());
 
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: After Shooter Subsystem create");
 
@@ -176,6 +177,7 @@ void Robot::TeleopPeriodic()
 {
 	OutputNavxData();
 	MonitorMotorCurrents();
+	SmartDashboard::PutNumber("Photo Sensor value (Volts)", RobotMap::intakeSubsystemPhotoSensor->GetVoltage());
 	Scheduler::GetInstance()->Run();
 }
 

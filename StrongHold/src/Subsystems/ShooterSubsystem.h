@@ -30,6 +30,7 @@ private:
 	double targetCountsPerSec;
 	double lastCountsReadTime;
 	double lastCounts;
+	double startShooterSpinupTime;
 };
 
 #endif

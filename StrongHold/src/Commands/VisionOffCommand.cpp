@@ -1,25 +1,26 @@
 #include "VisionOffCommand.h"
 #include "Robot.h"
+#include "Logging.h"
 
 VisionOffCommand::VisionOffCommand()
 {
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(chassis);
-	DriverStation::ReportError("I am in VisionOffCommand::VisionOffCommand()\n");
-//	Requires(Robot::visionSubsystem.get());
+	Logger::GetInstance()->Log(VisionTargetingLogId, Logger::kTRACE, "VisionOffCommand::VisionOffCommand() -> Enter");
+	Requires(Robot::visionSubsystem.get());
 }
 
 // Called just before this Command runs the first time
 void VisionOffCommand::Initialize()
 {
-	DriverStation::ReportError("I am in VisionOffCommand::Initialize()\n");
+	Logger::GetInstance()->Log(VisionTargetingLogId, Logger::kTRACE, "VisionOffCommand::Initialized() -> Enter");
 }
 
 // Called repeatedly when this Command is scheduled to run
 void VisionOffCommand::Execute()
 {
-	DriverStation::ReportError("I am in VisionOffCommand::Execute()\n");
-//	Robot::visionSubsystem->Off();
+	Logger::GetInstance()->Log(VisionTargetingLogId, Logger::kTRACE, "VisionOffCommand::Executed() -> Enter");
+	Robot::visionSubsystem->Off();
 }
 
 // Make this return true when this Command no longer needs to run execute()

@@ -53,7 +53,6 @@ void IntakeSubsystem::SetIntakeMotor(IntakeDirection id) {
 	intakeMotor->Set(speed);
 }
 bool IntakeSubsystem::IsBallLoaded() {
-	SmartDashboard::PutNumber("Photo Sensor value (Volts)", photoSensor->GetVoltage());
 	SmartDashboard::PutNumber("Photo Sensor target value (Volts)", PhotoSensorTargetVoltage);
 	if (photoSensor->GetVoltage() > PhotoSensorTargetVoltage){
 		return true;
