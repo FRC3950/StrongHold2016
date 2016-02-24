@@ -4,7 +4,7 @@
 
 
 namespace {
-	const double DEFAULT_RUN_TIME = 0;
+	const double DEFAULT_RUN_TIME = 0.5;
 }
 IntakeCommand::IntakeCommand()
 {
