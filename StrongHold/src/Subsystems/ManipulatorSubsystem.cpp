@@ -60,7 +60,6 @@ bool ManipulatorSubsystem::CheckUpperLimitSwitch()
 
 		}
 	}
-
 	return limitHit;
 }
 void ManipulatorSubsystem::FindHomePosition(bool forceFind) {
@@ -89,7 +88,6 @@ void ManipulatorSubsystem::MoveManipulator(float vertVelocity) {
 		vertVelocity = 0;
 	}
 	manipulatorMotor->Set(vertVelocity);
-
 }
 
 bool ManipulatorSubsystem::SetManipulatorSeekPosition(SeekManipulatorPos pos) {

@@ -36,6 +36,13 @@ inline double ImposeMinimumOnValue(double value, double minValue)
 
 	return value;
 }
+inline float ModifyJoystickValues(float val,float power){
+	float out = pow(val,power);
+	if ((val < 0 && out > 0)||(val > 0 && out < 0)) {
+		out *= -1;
+	}
+	return out;
+}
 
 
 

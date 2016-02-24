@@ -3,7 +3,7 @@
 #include "../Logging.h"
 #include "../ConfigKeys.h"
 #include "../Config/ConfigInstanceMgr.h"
-#include "../Commands/OuttakeCommand.h"
+#include "../Commands/IntakeCommand.h"
 #include <math.h>
 
 namespace {
@@ -12,7 +12,7 @@ namespace {
 		return ((4.282) * exp(-0.158 * distance)) + 0.395;
 	}
 
-	const double PhotoSensorTargetVoltage = convertDistanceToVoltage(5.0);
+	const float PhotoSensorTargetVoltage = 2.5;//convertDistanceToVoltage(5.0);
 }
 
 IntakeSubsystem::IntakeSubsystem() :
@@ -25,7 +25,7 @@ IntakeSubsystem::IntakeSubsystem() :
 void IntakeSubsystem::InitDefaultCommand()
 {
 	// Set the default command for a subsystem here.
-	SetDefaultCommand(new OuttakeCommand());
+	SetDefaultCommand(new IntakeCommand());
 }
 
 // Put methods for controlling this subsystem
@@ -54,7 +54,15 @@ void IntakeSubsystem::SetIntakeMotor(IntakeDirection id) {
 }
 bool IntakeSubsystem::IsBallLoaded() {
 	SmartDashboard::PutNumber("Photo Sensor target value (Volts)", PhotoSensorTargetVoltage);
-	if (photoSensor->GetVoltage() > PhotoSensorTargetVoltage){
+
+	Logger *logger = Logger::GetInstance();
+
+	float sensorVoltage = photoSensor->GetVoltage();
+
+	logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeSubsystem::IsBallLoaded ->Sensor is %f, Threshold = %f",
+				sensorVoltage, PhotoSensorTargetVoltage);
+
+	if (sensorVoltage > PhotoSensorTargetVoltage){
 		return true;
 	}
 	return false;

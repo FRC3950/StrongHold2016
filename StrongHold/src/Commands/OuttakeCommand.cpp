@@ -21,20 +21,16 @@ void OuttakeCommand::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void OuttakeCommand::Execute()
 {
-	Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kTRACE, "OuttakeCommand::Execute");
-	if (Robot::oi->getOuttakeTrigger()){
-		Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Out);
-	}
-	else {
-		Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Neutral);
-	}
-
+	Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Out);
 }
 
 // Make this return true when this Command no longer needs to run execute()
 bool OuttakeCommand::IsFinished()
 {
 	Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kTRACE, "OuttakeCommand::IsFinished");
+	if (Robot::oi->getOuttakeTrigger()){
+		return true;
+	}
 	return false;
 }
 

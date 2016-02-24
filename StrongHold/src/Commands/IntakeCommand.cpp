@@ -2,6 +2,7 @@
 #include "IntakeCommand.h"
 #include "../Logging.h"
 
+
 namespace {
 	const double DEFAULT_RUN_TIME = 0;
 }
@@ -21,7 +22,10 @@ void IntakeCommand::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void IntakeCommand::Execute()
 {
-	if (currState == Init) {
+	if (currState == Init && Robot::oi->getOuttakeTrigger()) {
+		Logger *logger = Logger::GetInstance();
+		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::Execute->Setting Intake to In");
+
 		Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::In);
 		currState = WaitBallLoaded;
 	}
@@ -30,33 +34,35 @@ void IntakeCommand::Execute()
 // Make this return true when this Command no longer needs to run execute()
 bool IntakeCommand::IsFinished()
 {
-	// because the Outtake Command is the default for the subsystem but
-	// we want to be able to stop this command when we want to outtake
-	if (Robot::oi->getOuttakeTrigger()) {
-		return true;
-	}
+	Logger *logger = Logger::GetInstance();
 
 	switch (currState) {
 	case Init:
+		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::IsFinished->currState = Init");
 		return false;
 
 	case WaitBallLoaded:
+		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::IsFinished->currState = WaitBallLoaded");
 		return WaitBallLoadedState();
 
 	case WaitTime:
+		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::IsFinished->currState = WaitTime");
 		return WaitTimeState();
 
 	case Done:
+		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::IsFinished->currState = Done");
 		return true;
 
 	default:
-		Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kERROR, "IntakeCommand::IsFinished->Unrecognized state %d, switching to Done State", currState);
+		logger->Log(IntakeSubsystemLogId, Logger::kERROR, "IntakeCommand::IsFinished->Unrecognized state %d, switching to Done State", currState);
 		return false;
 	}
 }
 
 bool IntakeCommand::WaitBallLoadedState() {
 	if (Robot::intakeSubsystem->IsBallLoaded()) {
+		Logger *logger = Logger::GetInstance();
+		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::WaitBallLoadedState->Ball is LOADED!");
 		startTime = Timer::GetFPGATimestamp();
 		currState = WaitTime;
 	}
@@ -65,9 +71,12 @@ bool IntakeCommand::WaitBallLoadedState() {
 }
 
 bool IntakeCommand::WaitTimeState() {
+	Logger *logger = Logger::GetInstance();
 	double currTime = Timer::GetFPGATimestamp();
 
-	if (currTime > startTime) {
+	if (currTime < startTime) {
+		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::WaitTimeState->TIME ROLL OVER RESETTING!");
+
 		startTime = currTime;
 		return false;
 	}
@@ -77,6 +86,7 @@ bool IntakeCommand::WaitTimeState() {
 	if (timeWaited >= runTime) {
 		Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Neutral);
 		currState = Done;
+		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::WaitTimeState->WAIT TIME EXCEEDED! RETURNING true");
 		return true;
 	}
 

@@ -76,12 +76,8 @@ void Robot::RobotInit()
 
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: After Drive Subsystem create");
 
-	#if NOT_YET
 
 	climberSubsystem.reset(new ClimberSubsystem());
-
-#endif
-
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: Before Shooter Subsystem create");
 	intakeSubsystem.reset(new IntakeSubsystem());
 	shooterSubsystem.reset(new ShooterSubsystem());

@@ -1,6 +1,6 @@
 #include "StopShooterCommand.h"
 #include "Robot.h"
-
+#include "Logging.h"
 StopShooterCommand::StopShooterCommand()
 {
 	// Use Requires() here to declare subsystem dependencies
@@ -18,6 +18,9 @@ void StopShooterCommand::Initialize()
 void StopShooterCommand::Execute()
 {
 	Robot::shooterSubsystem->SetTargetSpeed(0);
+	Logger *logger = Logger::GetInstance();
+
+	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "StopShooterCommand::Execute -> Enter");
 }
 
 // Make this return true when this Command no longer needs to run execute()

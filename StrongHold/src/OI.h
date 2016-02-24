@@ -22,6 +22,7 @@ private:
 	std::shared_ptr<JoystickButton> IntakeButton;
 	std::shared_ptr<JoystickButton> StopIntakeButton;
 	std::shared_ptr<JoystickButton> OuttakeButton;
+	std::shared_ptr<JoystickButton> KillIntakeAndShootCommand;
 	//possibly add shoot buttons for different distances or just base it off vision.
 
 public:

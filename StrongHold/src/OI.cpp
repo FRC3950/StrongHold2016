@@ -14,6 +14,7 @@
 #include "Commands/IntakeCommand.h"
 #include "Commands/OuttakeCommand.h"
 #include "Commands/StopIntakeCommand.h"
+#include "Commands/StopShootAndIntakeCommandGroup.h"
 
 OI::OI() {
 	// Process operator interface input here.
@@ -27,21 +28,23 @@ OI::OI() {
 
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Created Joysticks");
 
-	LaunchClimberButton.reset(new JoystickButton(xBoxControler.get(),0));
-	ToggleHoodButton.reset(new JoystickButton(xBoxControler.get(),3));
+	LaunchClimberButton.reset(new JoystickButton(xBoxControler.get(),8));
+	ToggleHoodButton.reset(new JoystickButton(xBoxControler.get(),6));
 	//HomePosButton.reset(new JoystickButton(xBoxControler.get(),2));
-	//IntakePosButton.reset(new JoystickButton(xBoxControler.get(),3));
-	//DownPosButton.reset(new JoystickButton(xBoxControler.get(),4));
+	IntakePosButton.reset(new JoystickButton(xBoxControler.get(),4));
+	DownPosButton.reset(new JoystickButton(xBoxControler.get(),3));
 	ReadyShootButton.reset(new JoystickButton(xBoxControler.get(),1));
-	ShootButton.reset(new JoystickButton(xBoxControler.get(),6));
-	IntakeButton.reset(new JoystickButton(xBoxControler.get(),5));
+	//ShootButton.reset(new JoystickButton(xBoxControler.get(),6));
+	//IntakeButton.reset(new JoystickButton(xBoxControler.get(),5));
 	//StopIntakeButton.reset(new JoystickButton(xBoxControler.get(),2));
-	//OuttakeButton.reset(new JoystickButton(xBoxControler.get(),4));
+	OuttakeButton.reset(new JoystickButton(xBoxControler.get(),5));
 	ShiftGearButton.reset(new JoystickButton(joystick.get(),4));
 	PowerTakeOffButton.reset(new JoystickButton(joystick.get(),11));
 	ResetToDriveButton.reset(new JoystickButton(joystick.get(),12));
 	VisionOnButton.reset(new JoystickButton(joystick.get(),7));
 	VisionOffButton.reset(new JoystickButton(joystick.get(),8));
+	KillIntakeAndShootCommand.reset(new JoystickButton(xBoxControler.get(),2));
+
 #endif
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Created Joystick Buttons");
 
@@ -52,18 +55,19 @@ OI::OI() {
 #if 1
 	//LaunchClimberButton->WhenPressed(new LaunchClimberCommand());
 	ToggleHoodButton->WhenPressed(new ToggleShooterHoodCommand());
-	//HomePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Up));
-	//DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Down));
+	IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Intake));
+	DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Down));
 	ReadyShootButton->WhenPressed(new DashboardShootCommand());
-	ShootButton->WhenPressed(new ShootCommandGroup());
+	//ShootButton->WhenPressed(new ShootCommandGroup());
 	ShiftGearButton->WhenPressed(new ToggleGearCommand());
 	PowerTakeOffButton->WhenPressed(new ClimbCommand());
 	ResetToDriveButton->WhenPressed(new DriveSubsystemInteruptCommand());
-	IntakeButton->WhenPressed(new IntakeCommand());
+//	IntakeButton->WhenPressed(new IntakeCommand());
 //	StopIntakeButton->WhenPressed(new StopIntakeCommand());
-//	OuttakeButton->WhenPressed(new OuttakeCommand());
+	OuttakeButton->WhileHeld(new OuttakeCommand());
 	VisionOnButton->WhenPressed(new VisionOnCommand());
 	VisionOffButton->WhenPressed(new VisionOffCommand());
+	KillIntakeAndShootCommand->WhenPressed(new StopShootAndIntakeCommandGroup());
 #endif
 
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Assigned Commands to Joystick Buttons");

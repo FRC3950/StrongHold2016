@@ -3,8 +3,8 @@
 #include "../UtilFun.h"
 
 namespace {
-	float joyStickPositiveEpsilon = 0.3;
-	float joyStickNegitiveEpsilon = -0.3;
+	float joyStickPositiveEpsilon = 0.2;
+	float joyStickNegitiveEpsilon = -0.2;
 
 }
 ManipulatorCommand::ManipulatorCommand()
@@ -23,6 +23,7 @@ void ManipulatorCommand::Initialize()
 void ManipulatorCommand::Execute()
 {
 	float y = Robot::oi->getManipulatorSpeed();
+	y =  ModifyJoystickValues(y,2.0f);
 	Robot::manipulatorSubsystem->MoveManipulator(ZeroIfInRangeInclusive(y,joyStickPositiveEpsilon,joyStickNegitiveEpsilon));
 
 }

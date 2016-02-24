@@ -7,7 +7,6 @@
 #include "RobotMap.h"
 #include "LiveWindow/LiveWindow.h"
 
-
 #include <iostream>
 
 std::shared_ptr<Victor> RobotMap::driveSubsystemVictor1;
@@ -65,18 +64,14 @@ void RobotMap::init(){
     intakeSubsystemUpperLimitSwitch.reset(new DigitalInput(0));
 
     uptakeSubsystemIndexerTalon.reset(new CANTalon(1));
+#endif
 
-//	climberSubsystemSolenoid1.reset(new Solenoid(2));
-//
-//	climberSubsystemSolenoid2.reset(new Solenoid(3));
 
     climberSubsystemMotor.reset(new Talon(5));
 
-    climberSubsystemLimitSwitch.reset(new DigitalInput(1));
-#endif
+    climberSubsystemLimitSwitch.reset(new DigitalInput(0));
 
     shooterSubsystemShooterCoverSolenoid.reset(new Solenoid(2));
-
 
     shooterSubsystemShooterWheelTalon.reset(new CANTalon(0));
 
