@@ -67,7 +67,7 @@ void RobotMap::init(){
 #endif
 
 
-    climberSubsystemMotor.reset(new Talon(5));
+    climberSubsystemMotor.reset(new Talon(4));
 
     climberSubsystemLimitSwitch.reset(new DigitalInput(0));
 

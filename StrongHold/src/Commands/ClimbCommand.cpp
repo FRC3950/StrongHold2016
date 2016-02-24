@@ -9,18 +9,19 @@ ClimbCommand::ClimbCommand()
 {
 	// Use Requires() here to declare subsystem dependencies
 	Requires(Robot::driveSubsystem.get());
+	Logger::GetInstance()->Log(ClimbingLogId, Logger::kTRACE, "Climb Constructor Call");
 }
 
 // Called just before this Command runs the first time
 void ClimbCommand::Initialize()
 {
-
+	Logger::GetInstance()->Log(ClimbingLogId, Logger::kTRACE, "Climb intit");
 }
 
 // Called repeatedly when this Command is scheduled to run
 void ClimbCommand::Execute()
 {
-	Logger::GetInstance()->Log(ClimbingLogId, Logger::kTRACE, "ClimbCommand::Execute Enter()");
+	Logger::GetInstance()->Log(ClimbingLogId, Logger::kTRACE, "ClimbCommand::Execute Enter() %d", Robot::driveSubsystem->InClimbMode());
 	if (!Robot::driveSubsystem->InClimbMode()) {
 		Robot::driveSubsystem->SetMode(DriveSubsystem::ClimbingMode);
 	}

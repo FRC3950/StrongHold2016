@@ -173,6 +173,7 @@ void Robot::TeleopPeriodic()
 {
 	OutputNavxData();
 	MonitorMotorCurrents();
+	SmartDashboard::PutNumber("total current", pdp->GetTotalCurrent());
 	SmartDashboard::PutNumber("Photo Sensor value (Volts)", RobotMap::intakeSubsystemPhotoSensor->GetVoltage());
 	Scheduler::GetInstance()->Run();
 }

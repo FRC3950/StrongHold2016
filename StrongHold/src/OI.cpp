@@ -39,7 +39,7 @@ OI::OI() {
 	//StopIntakeButton.reset(new JoystickButton(xBoxControler.get(),2));
 	OuttakeButton.reset(new JoystickButton(xBoxControler.get(),5));
 	ShiftGearButton.reset(new JoystickButton(joystick.get(),4));
-	PowerTakeOffButton.reset(new JoystickButton(joystick.get(),11));
+	PowerTakeOffButton.reset(new JoystickButton(joystick.get(),9));
 	ResetToDriveButton.reset(new JoystickButton(joystick.get(),12));
 	VisionOnButton.reset(new JoystickButton(joystick.get(),7));
 	VisionOffButton.reset(new JoystickButton(joystick.get(),8));
@@ -53,7 +53,7 @@ OI::OI() {
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Intake Command assigned.");
 
 #if 1
-	//LaunchClimberButton->WhenPressed(new LaunchClimberCommand());
+	LaunchClimberButton->WhenPressed(new LaunchClimberCommand());
 	ToggleHoodButton->WhenPressed(new ToggleShooterHoodCommand());
 	IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Intake));
 	DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Down));
