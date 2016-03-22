@@ -13,6 +13,11 @@ public:
 	bool IsFinished();
 	void End();
 	void Interrupted();
+private:
+	double holdPos;
+	bool holdPosSet;
+	bool IsInRangeOfHoldPos();
+	double DirectionToMove();
 };
 
 #endif

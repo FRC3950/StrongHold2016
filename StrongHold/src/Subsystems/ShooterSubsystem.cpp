@@ -188,6 +188,7 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "currSpeed=%g rots/sec",
 			    ConvertCountsPerSecToRotationsPerSec(currSpeed));
+	SmartDashboard::PutNumber("current Rotations per second of shooter", ConvertCountsPerSecToRotationsPerSec(currSpeed));
 
 	if (InRange(currSpeed, targetCountsPerSec, ShooterMotorCountsPerSecEpsilon))
 	{

@@ -54,6 +54,7 @@ public:
 
 	void AvgNewMotorCurrents(const DriveMotorCurrents &currents);
 
+	bool twistMode = true;
 private:
 	void SyncDriveModeToHardware();
 	void OutputAvgMotorCurrent(DriveMotorCurrents::MotorId motorId) const;
@@ -75,6 +76,8 @@ private:
 
 	unsigned timeStep;
 	bool overloadCondition = false;
+
+
 };
 
 #endif

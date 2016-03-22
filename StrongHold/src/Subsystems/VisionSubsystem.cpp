@@ -1,5 +1,6 @@
 #include "VisionSubsystem.h"
 #include "../RobotMap.h"
+#include "Logging.h"
 
 VisionSubsystem::VisionSubsystem() :
 		Subsystem("VisionSubsystem")
@@ -12,10 +13,14 @@ VisionSubsystem::VisionSubsystem() :
 	imaqError = IMAQdxOpenCamera("cam0", IMAQdxCameraControlModeController, &session);
 	if(imaqError != IMAQdxErrorSuccess) {
 		DriverStation::ReportError("IMAQdxOpenCamera error: " + std::to_string((long)imaqError) + "\n");
+		std::string x = "IMAQdxOpenCamera error: " + std::to_string((long)imaqError) + "\n";
+		Logger::GetInstance()->Log(VisionTargetingLogId, Logger::kTRACE, x.c_str());
 	}
 	imaqError = IMAQdxConfigureGrab(session);
 	if(imaqError != IMAQdxErrorSuccess) {
 		DriverStation::ReportError("IMAQdxConfigureGrab error: " + std::to_string((long)imaqError) + "\n");
+		std::string x = "IMAQdxConfigureGrab error: " + std::to_string((long)imaqError) + "\n";
+		Logger::GetInstance()->Log(VisionTargetingLogId, Logger::kTRACE, x.c_str());
 	}
 
 }
@@ -52,7 +57,7 @@ void VisionSubsystem::On()
 			blueRange.minValue = 0;
 			blueRange.minValue = 255;
 //			Image * frame1 = imaqCreateImage(IMAQ_IMAGE_RGB, 0);
-			imaqColorThreshold(frame, frame, 255, ColorMode::IMAQ_RGB, &redRange, &greenRange, &blueRange);
+//			imaqColorThreshold(frame, frame, 255, ColorMode::IMAQ_RGB, &redRange, &greenRange, &blueRange);
 
 			//	        imaqSizeFilter(frame, frame, Connectivity::IMAQ_EIGHT_CONNECTED, 1, IMAQ_KEEP_LARGE, NULL);
 

@@ -1,6 +1,7 @@
 #include "StopShootAndIntakeCommandGroup.h"
 #include "StopIntakeCommand.h"
 #include "StopShooterCommand.h"
+#include "ClimberInteruptCommand.h"
 
 StopShootAndIntakeCommandGroup::StopShootAndIntakeCommandGroup()
 {
@@ -22,4 +23,5 @@ StopShootAndIntakeCommandGroup::StopShootAndIntakeCommandGroup()
 	// arm.
 	AddParallel(new StopIntakeCommand());
 	AddParallel(new StopShooterCommand());
+	AddParallel(new ClimberInteruptCommand());
 }

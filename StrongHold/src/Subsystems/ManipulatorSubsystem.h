@@ -20,6 +20,7 @@ public:
 
 	void FindHomePosition(bool forceFind);
 	void MoveManipulator(float vertVelocity);
+	double GetManipulatorPos();
 
 	bool SetManipulatorSeekPosition(SeekManipulatorPos pos);
 	bool hasManipulatorReachedPos();

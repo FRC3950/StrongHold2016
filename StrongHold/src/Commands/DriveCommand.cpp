@@ -7,7 +7,7 @@
 #include "JoystickConstants.h"
 namespace{
 	const float JOYSTICK_Y_DEFAULT_MODIFIER = 1.0f;
-	const float JOYSTICK_TWIST_DEFAULT_MODIFIER = .9f;
+	const float JOYSTICK_TWIST_DEFAULT_MODIFIER = 1.0f;
 
 
 	const float FLOOR = 0.001f; // do not set to zero
@@ -50,7 +50,7 @@ void DriveCommand::Execute()
 	}
 	//float x = Robot::oi->getJoystickX();
 	float y = -Robot::oi->getJoystickY();
-	float twist = -Robot::oi->getjoystickTwist();
+	float twist = Robot::driveSubsystem->twistMode ? -Robot::oi->getjoystickTwist() : -Robot::oi->getJoystickX();
 
 	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Execute()Raw values: y=%f, twist=%f", y, twist);
 
@@ -70,7 +70,7 @@ void DriveCommand::Execute()
 	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Execute() After squaring y=%f, twist=%f", y, twist);
 
 	y = floorVal(y);
-	twist = floorVal(twist);
+	//twist = floorVal(twist);
 
 	Logger::GetInstance()->Log(DrivingLogId, Logger::kTRACE, "DriveCommand::Execute() After flooring y=%f, twist=%f", y, twist);
 

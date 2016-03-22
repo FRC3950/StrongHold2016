@@ -6,14 +6,16 @@
 
 namespace {
 	double UpPosCount = 0.0;
-	double IntakePosCount = 500.0;
-	double DownPosCount = 1000.00;
+	double IntakePosCount = 997.0;
+	double DownPosCount = 1350.00;
 
 	double LessThanPosMotorSpeed = .5;
 	double GreaterThanPosMotorSpeed = -.5;
 
-	double SeekPosRagePositive = 0.5;
-	double SeekPosRangeNegitive = -0.5;
+	double speedMod = .005;
+
+	double SeekPosRagePositive = 10;
+	double SeekPosRangeNegitive = -10;
 
 	const float UP_MANIPULATOR_SPEED = -0.5;
 	const float DOWN_MANIPULATOR_SPEED = 0.5;
@@ -88,6 +90,7 @@ void ManipulatorSubsystem::MoveManipulator(float vertVelocity) {
 		vertVelocity = 0;
 	}
 	manipulatorMotor->Set(vertVelocity);
+	SmartDashboard::PutNumber("Current manipulator pos", GetManipulatorPos());
 }
 
 bool ManipulatorSubsystem::SetManipulatorSeekPosition(SeekManipulatorPos pos) {
@@ -116,25 +119,40 @@ bool ManipulatorSubsystem::hasManipulatorReachedPos() {
 		seekPos = None;
 		return true;
 	}
-	else if (currPos > manipMotorCountTarget){
-		if (!CheckUpperLimitSwitch()){
-			manipulatorMotor->Set(GreaterThanPosMotorSpeed);
-		}
-		else {
-			manipulatorMotor->Set(0.0);
-			seekPos = None;
-			return true;
-		}
-	}
 	else {
-		manipulatorMotor->Set(LessThanPosMotorSpeed);
+		double speed = (manipMotorCountTarget - currPos) * speedMod;
+		if (speed > 1){
+			speed = 1;
+		}
+		else if (speed < -1) {
+			speed = -1;
+		}
+		manipulatorMotor->Set(speed);
 	}
+//	else if (currPos > manipMotorCountTarget){
+//		if (!CheckUpperLimitSwitch()){
+//			manipulatorMotor->Set(GreaterThanPosMotorSpeed);
+//		}
+//		else {
+//			manipulatorMotor->Set(0.0);
+//			seekPos = None;
+//			return true;
+//		}
+//	}
+//	else {
+//		manipulatorMotor->Set(LessThanPosMotorSpeed);
+//	}
+
 	return false;
 }
 
 void ManipulatorSubsystem::cancelManipulatorSeek() {
 	seekPos = None;
 	manipulatorMotor->Set(0.0);
+
+}
+double ManipulatorSubsystem::GetManipulatorPos(){
+	return manipulatorMotor->GetPosition();
 }
 
 // Put methods for controlling this subsystem

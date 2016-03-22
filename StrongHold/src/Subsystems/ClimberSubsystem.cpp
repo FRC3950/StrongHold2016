@@ -19,7 +19,7 @@ void ClimberSubsystem::InitDefaultCommand()
 // here. Call these from Commands.
 void ClimberSubsystem::LaunchClimber(){
 	if (!limitSwitch->Get()){
-		motor->Set(1.0);
+		motor->Set(0.50f);
 	}
 }
 void ClimberSubsystem::stopClimber(){

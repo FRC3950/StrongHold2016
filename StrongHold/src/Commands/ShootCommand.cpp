@@ -27,7 +27,10 @@ void ShootCommand::Execute()
 // Make this return true when this Command no longer needs to run execute()
 bool ShootCommand::IsFinished()
 {
-	Robot::shooterSubsystem->HasHitTargetSpeed();
+	if (Robot::shooterSubsystem->HasHitTargetSpeed()){
+		SmartDashboard::PutBoolean("Has hit target speed", true);
+	}
+	SmartDashboard::PutBoolean("Has hit target speed", false);
 	return false;
 }
 

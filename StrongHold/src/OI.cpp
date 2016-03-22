@@ -15,6 +15,7 @@
 #include "Commands/OuttakeCommand.h"
 #include "Commands/StopIntakeCommand.h"
 #include "Commands/StopShootAndIntakeCommandGroup.h"
+#include "Commands/TwistToggleCommand.h"
 
 OI::OI() {
 	// Process operator interface input here.
@@ -28,7 +29,7 @@ OI::OI() {
 
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Created Joysticks");
 
-	LaunchClimberButton.reset(new JoystickButton(xBoxControler.get(),8));
+	LaunchClimberButton.reset(new JoystickButton(joystick.get(),11));
 	ToggleHoodButton.reset(new JoystickButton(xBoxControler.get(),6));
 	//HomePosButton.reset(new JoystickButton(xBoxControler.get(),2));
 	IntakePosButton.reset(new JoystickButton(xBoxControler.get(),4));
@@ -44,6 +45,7 @@ OI::OI() {
 	VisionOnButton.reset(new JoystickButton(joystick.get(),7));
 	VisionOffButton.reset(new JoystickButton(joystick.get(),8));
 	KillIntakeAndShootCommand.reset(new JoystickButton(xBoxControler.get(),2));
+	ToggleTwistControlButton.reset(new JoystickButton(joystick.get(),5));
 
 #endif
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Created Joystick Buttons");
@@ -56,7 +58,7 @@ OI::OI() {
 	LaunchClimberButton->WhenPressed(new LaunchClimberCommand());
 	ToggleHoodButton->WhenPressed(new ToggleShooterHoodCommand());
 	IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Intake));
-	DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Down));
+	//DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Down));
 	ReadyShootButton->WhenPressed(new DashboardShootCommand());
 	//ShootButton->WhenPressed(new ShootCommandGroup());
 	ShiftGearButton->WhenPressed(new ToggleGearCommand());
@@ -68,6 +70,7 @@ OI::OI() {
 	VisionOnButton->WhenPressed(new VisionOnCommand());
 	VisionOffButton->WhenPressed(new VisionOffCommand());
 	KillIntakeAndShootCommand->WhenPressed(new StopShootAndIntakeCommandGroup());
+	ToggleTwistControlButton->WhenPressed(new TwistToggleCommand());
 #endif
 
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Assigned Commands to Joystick Buttons");
