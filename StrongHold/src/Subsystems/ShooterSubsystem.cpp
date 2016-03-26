@@ -140,7 +140,9 @@ void ShooterSubsystem::SetTargetSpeed(float rotsPerSec){
 	Wait(0.25);
 	targetCountsPerSec = ConvertRotationstoCounts(rotsPerSec);
 	lastCountsReadTime = Timer::GetFPGATimestamp();
+	startSeekTime = lastCountsReadTime;
 	lastCounts = 0.0;//fabs(shooterMotor->GetPosition());
+	currSpeed = 0.0;
 	startShooterSpinupTime = lastCountsReadTime;
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Target Counts per second: %g", targetCountsPerSec);
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Epsilon - %g", ShooterMotorCountsPerSecEpsilon);
@@ -152,6 +154,14 @@ void ShooterSubsystem::SetTargetSpeed(float rotsPerSec){
 }
 
 
+namespace {
+const double DelayBeforeEarlyExitOnZeroSpeedInSecs = 1.0;
+
+void UpdateSmartDashboard(double countsPerSec) {
+	SmartDashboard::PutNumber("current Rotations per second of shooter", ConvertCountsPerSecToRotationsPerSec(countsPerSec));
+}
+}
+
 bool ShooterSubsystem::HasHitTargetSpeed() {
 	Logger *logger = Logger::GetInstance();
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "HasHitTargetSpeed Entered");
@@ -159,6 +169,8 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 	if (targetCountsPerSec <= 0.0) {
 		shooterMotor->Set(0.0);
 		logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "HasHitTargetSpeed: targetCountsPerSec <= 0.0, shutting off motor. Returning true.");
+
+		UpdateSmartDashboard(currSpeed);
 
 		return true;
 	}
@@ -173,22 +185,34 @@ bool ShooterSubsystem::HasHitTargetSpeed() {
 		logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Time or Counts has rolled over.  Resetting lastCountsReadTime=%g, lastCounts=%g",
 					lastCountsReadTime, lastCounts);
 		logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "HasHitTargetSpeed Exit, Returning False");
+		UpdateSmartDashboard(currSpeed);
 		return false;
 	}
 
 	if ((currTime - lastCountsReadTime) < MIN_ELAPSED_TIME_FOR_SPEED_CHECK) {
 		logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "Waiting for at least .01 second to elapse, Returning false.");
+		UpdateSmartDashboard(currSpeed);
 
 		return false;
 	}
-	double currSpeed = (currCounts - lastCounts) / (currTime - lastCountsReadTime);
+
+	double prevSpeed = currSpeed;
+
+	currSpeed = (currCounts - lastCounts) / (currTime - lastCountsReadTime);
 
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "currSpeed=%g, currCounts=%g, lastCounts=%g, currTime=%g, lastCountsReadTime=%g",
 			    currSpeed, currCounts, lastCounts, currTime, lastCountsReadTime);
 
 	logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "currSpeed=%g rots/sec",
 			    ConvertCountsPerSecToRotationsPerSec(currSpeed));
-	SmartDashboard::PutNumber("current Rotations per second of shooter", ConvertCountsPerSecToRotationsPerSec(currSpeed));
+
+	if ((currSpeed == 0.0) && ((currTime - startSeekTime) >= DelayBeforeEarlyExitOnZeroSpeedInSecs)) {
+		logger->Log(ShooterSubsystemLogId, Logger::kTRACE, "currSpeed=0.0 rots/sec. Leaving with no change.");
+		UpdateSmartDashboard(prevSpeed);
+		return false;
+	}
+
+	UpdateSmartDashboard(currSpeed);
 
 	if (InRange(currSpeed, targetCountsPerSec, ShooterMotorCountsPerSecEpsilon))
 	{

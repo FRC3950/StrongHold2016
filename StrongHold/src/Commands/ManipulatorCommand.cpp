@@ -9,10 +9,8 @@ namespace {
 	float HoldPosSpeedPrecent = .05;
 
 	double HoldPosRange = 1;
-
-
-
 }
+
 ManipulatorCommand::ManipulatorCommand()
 {
 	// Use Requires() here to declare subsystem dependencies
@@ -36,7 +34,6 @@ void ManipulatorCommand::Execute()
 	Robot::manipulatorSubsystem->MoveManipulator(y);
 
 	// end of code for manual control. beginning of code for holding position
-	/*
 	if (y == 0 && !holdPosSet){
 		// checks if the joystick was let go of and the target point has not been set
 		holdPos = Robot::manipulatorSubsystem->GetManipulatorPos();
@@ -66,7 +63,6 @@ void ManipulatorCommand::Execute()
 		                       // manipulator agian
 		holdPosSet = false;
 	}
-	*/
 }
 
 // Make this return true when this Command no longer needs to run execute()

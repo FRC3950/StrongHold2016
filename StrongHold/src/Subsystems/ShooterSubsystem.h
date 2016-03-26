@@ -28,8 +28,10 @@ private:
 	std::shared_ptr<Solenoid> hoodSolenoid;
 	std::shared_ptr<CANTalon> shooterMotor;
 	double targetCountsPerSec;
+	double startSeekTime;
 	double lastCountsReadTime;
 	double lastCounts;
+	double currSpeed;
 	double startShooterSpinupTime;
 };
 
