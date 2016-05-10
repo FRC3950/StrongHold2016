@@ -6,9 +6,9 @@ namespace {
 	float joyStickPositiveEpsilon = 0.2;
 	float joyStickNegitiveEpsilon = -0.2;
 
-	float HoldPosSpeedPrecent = .05;
+	float HoldPosSpeedPrecent = .02;
 
-	double HoldPosRange = 1;
+	double HoldPosRange = 10;
 }
 
 ManipulatorCommand::ManipulatorCommand()
@@ -31,8 +31,16 @@ void ManipulatorCommand::Execute()
 	float y = Robot::oi->getManipulatorSpeed();
 	y =  ModifyJoystickValues(y,3.0f);
 	y = ZeroIfInRangeInclusive(y,joyStickPositiveEpsilon,joyStickNegitiveEpsilon);
+	if (y == 0 && !stoped) {
 	Robot::manipulatorSubsystem->MoveManipulator(y);
-
+	stoped = true;
+	}
+	if (y != 0) {
+		Robot::manipulatorSubsystem->MoveManipulator(y);
+		if (stoped){
+		stoped = false;
+		}
+	}
 	// end of code for manual control. beginning of code for holding position
 	if (y == 0 && !holdPosSet){
 		// checks if the joystick was let go of and the target point has not been set
@@ -47,11 +55,11 @@ void ManipulatorCommand::Execute()
 		// the target and the position
 		speed = holdPos - Robot::manipulatorSubsystem->GetManipulatorPos();
 		speed *= HoldPosSpeedPrecent;
-		if (speed > 1){
-			speed = 1;
+		if (speed > .5){
+			speed = .5;
 		}
-		else if (speed < -1) {
-			speed = -1;
+		else if (speed < -0.5) {
+			speed = -0.5;
 		}
 		Robot::manipulatorSubsystem->MoveManipulator(speed);
 	}

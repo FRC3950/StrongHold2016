@@ -5,6 +5,7 @@
 #include "Commands/ToggleShooterHoodCommand.h"
 #include "Commands/ManipulatorSeekPosCommand.h"
 #include "Commands/DashboardShootCommand.h"
+#include "Commands/DefultValueShootCommand.h"
 #include "Commands/ShootCommandGroup.h"
 #include "Commands/ToggleGearCommand.h"
 #include "Commands/ClimbCommand.h"
@@ -16,6 +17,8 @@
 #include "Commands/StopIntakeCommand.h"
 #include "Commands/StopShootAndIntakeCommandGroup.h"
 #include "Commands/TwistToggleCommand.h"
+#include "Commands/ToggleDriveDirectionCommand.h"
+#include "Commands/DropClimberCommand.h"
 
 OI::OI() {
 	// Process operator interface input here.
@@ -29,11 +32,11 @@ OI::OI() {
 
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Created Joysticks");
 
-	LaunchClimberButton.reset(new JoystickButton(joystick.get(),11));
+	LaunchClimberButton.reset(new JoystickButton(xBoxControler.get(),3));
 	ToggleHoodButton.reset(new JoystickButton(xBoxControler.get(),6));
 	//HomePosButton.reset(new JoystickButton(xBoxControler.get(),2));
-	IntakePosButton.reset(new JoystickButton(xBoxControler.get(),4));
-	DownPosButton.reset(new JoystickButton(xBoxControler.get(),3));
+	//IntakePosButton.reset(new JoystickButton(xBoxControler.get(),4));
+	//DownPosButton.reset(new JoystickButton(xBoxControler.get(),3));
 	ReadyShootButton.reset(new JoystickButton(xBoxControler.get(),1));
 	//ShootButton.reset(new JoystickButton(xBoxControler.get(),6));
 	//IntakeButton.reset(new JoystickButton(xBoxControler.get(),5));
@@ -46,6 +49,8 @@ OI::OI() {
 	VisionOffButton.reset(new JoystickButton(joystick.get(),8));
 	KillIntakeAndShootCommand.reset(new JoystickButton(xBoxControler.get(),2));
 	ToggleTwistControlButton.reset(new JoystickButton(joystick.get(),5));
+	ToggleDriveDirectionButton.reset(new JoystickButton(joystick.get(),6));
+	dropClimberButton.reset(new JoystickButton(xBoxControler.get(),4));
 
 #endif
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Created Joystick Buttons");
@@ -57,9 +62,9 @@ OI::OI() {
 #if 1
 	LaunchClimberButton->WhenPressed(new LaunchClimberCommand());
 	ToggleHoodButton->WhenPressed(new ToggleShooterHoodCommand());
-	IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Intake));
+	//IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Intake));
 	//DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Down));
-	ReadyShootButton->WhenPressed(new DashboardShootCommand());
+	ReadyShootButton->WhenPressed(new DefultValueShootCommand());
 	//ShootButton->WhenPressed(new ShootCommandGroup());
 	ShiftGearButton->WhenPressed(new ToggleGearCommand());
 	PowerTakeOffButton->WhenPressed(new ClimbCommand());
@@ -71,6 +76,8 @@ OI::OI() {
 	VisionOffButton->WhenPressed(new VisionOffCommand());
 	KillIntakeAndShootCommand->WhenPressed(new StopShootAndIntakeCommandGroup());
 	ToggleTwistControlButton->WhenPressed(new TwistToggleCommand());
+	ToggleDriveDirectionButton->WhenPressed(new ToggleDriveDirectionCommand());
+	dropClimberButton->WhenPressed(new DropClimberCommand());
 #endif
 
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Assigned Commands to Joystick Buttons");
@@ -94,4 +101,13 @@ float OI::getManipulatorSpeed(){
 }
 bool OI::getOuttakeTrigger() {
 	return xBoxControler->GetAxis(Joystick::AxisType::kThrottleAxis) > .5f;
+}
+bool OI::getLaunchClimberButton() {
+	return LaunchClimberButton->Get();
+}
+bool OI::getOuttakeButton(){
+	return OuttakeButton->Get();
+}
+bool OI::getDropClimberButton() {
+	return dropClimberButton->Get();
 }

@@ -114,7 +114,7 @@ bool ManipulatorSubsystem::hasManipulatorReachedPos() {
 
 	double currPos = manipulatorMotor->GetPosition();
 
-	if (InRangeInclusive(currPos,SeekPosRagePositive,SeekPosRangeNegitive)){
+	if (currPos < manipMotorCountTarget + SeekPosRagePositive && currPos > manipMotorCountTarget - SeekPosRagePositive){
 		manipulatorMotor->Set(0.0);
 		seekPos = None;
 		return true;

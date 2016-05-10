@@ -19,6 +19,8 @@ public:
 	void InitDefaultCommand();
 	void On();
 	void Off();
+	void GrabImage();
+
 };
 
 #endif

@@ -47,6 +47,7 @@ public:
 //	static std::shared_ptr<Solenoid> climberSubsystemSolenoid2;
 
 	static std::shared_ptr<Talon> climberSubsystemMotor;
+	static std::shared_ptr<CANTalon> climberSubsystemMotor2;
 	static std::shared_ptr<DigitalInput> climberSubsystemLimitSwitch;
 
 	static std::shared_ptr<AHRS> ahrs;

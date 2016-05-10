@@ -26,6 +26,7 @@ std::shared_ptr<Solenoid> RobotMap::shooterSubsystemShooterCoverSolenoid;
 //std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid1;
 //std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid2;
 std::shared_ptr<Talon> RobotMap::climberSubsystemMotor;
+std::shared_ptr<CANTalon> RobotMap::climberSubsystemMotor2;
 std::shared_ptr<DigitalInput> RobotMap::climberSubsystemLimitSwitch;
 std::shared_ptr<AHRS> RobotMap::ahrs;
 std::shared_ptr<PowerDistributionPanel> RobotMap::pdp;
@@ -68,6 +69,7 @@ void RobotMap::init(){
 
 
     climberSubsystemMotor.reset(new Talon(4));
+    climberSubsystemMotor2.reset(new CANTalon(2));
 
     climberSubsystemLimitSwitch.reset(new DigitalInput(0));
 

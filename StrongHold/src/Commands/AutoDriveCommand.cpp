@@ -2,7 +2,7 @@
 #include "../Robot.h"
 
 namespace {
-	const float AutoMoveSpeed = 0.9;
+	const float AutoMoveSpeed = 1.0;
 	const float DriveTimeDefault = 2.0;
 }
 AutoDriveCommand::AutoDriveCommand(double time)

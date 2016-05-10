@@ -52,6 +52,7 @@ private:
 
 	std::unique_ptr<SendableChooser> chooser;
 	std::shared_ptr<AHRS> ahrs;
+	std::unique_ptr<SendableChooser> autonomousChooser;
 };
 
 #endif /* SRC_ROBOT_H_ */

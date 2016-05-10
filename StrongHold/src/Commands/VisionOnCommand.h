@@ -14,6 +14,10 @@ public:
 	bool IsFinished();
 	void End();
 	void Interrupted();
+private:
+	void cleanUp();
+
+	double lastTime = 0;
 };
 
 #endif

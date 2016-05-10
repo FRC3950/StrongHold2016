@@ -27,6 +27,9 @@ void LaunchClimberCommand::Execute()
 // Make this return true when this Command no longer needs to run execute()
 bool LaunchClimberCommand::IsFinished()
 {
+	if (!Robot::oi->getLaunchClimberButton()){
+		return true;
+	}
 	return Robot::climberSubsystem->inClimbState();
 }
 

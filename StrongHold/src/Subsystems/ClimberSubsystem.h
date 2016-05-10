@@ -10,6 +10,7 @@ private:
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities
 	std::shared_ptr<Talon> motor;
+	std::shared_ptr<CANTalon> motor2;
 	std::shared_ptr<DigitalInput> limitSwitch;
 public:
 	ClimberSubsystem();
@@ -17,6 +18,7 @@ public:
 	void LaunchClimber();
 	void stopClimber();
 	bool inClimbState();
+	void dropClimber();
 };
 
 #endif

@@ -20,7 +20,8 @@ void VisionOffCommand::Initialize()
 void VisionOffCommand::Execute()
 {
 	Logger::GetInstance()->Log(VisionTargetingLogId, Logger::kTRACE, "VisionOffCommand::Executed() -> Enter");
-	Robot::visionSubsystem->Off();
+	// We rely on the VisionOnCommand's interruption to turn the vision off.
+	//Robot::visionSubsystem->Off();
 }
 
 // Make this return true when this Command no longer needs to run execute()

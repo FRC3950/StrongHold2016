@@ -19,11 +19,13 @@ private:
 	void Cleanup();
 	bool WaitBallLoadedState();
 	bool WaitTimeState();
+	bool isBallDetectedOnStart;
 
 	enum State {
 		Init,
 		WaitBallLoaded,
 		WaitTime,
+		ReleseWait,
 		Done
 	};
 

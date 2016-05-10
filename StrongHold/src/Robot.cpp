@@ -7,7 +7,10 @@
 #include "CommandBase.h"
 #include "Config/CsvConfigFileReader.h"
 #include "Config/ConfigInstanceMgr.h"
-
+#include "Commands/NothingAutoCommandGroup.h"
+#include "Commands/BreachAutoCommandGroup.h"
+#include "Commands/BreachLowBarCommandGroup.h"
+#include "Commands/ReachAutoCommandGroup.h"
 
 static const std::string ConfigFileName = "/home/lvuser/RobotConfig.csv";
 
@@ -47,6 +50,7 @@ DriveMotorCurrents Robot::getDriveMotorCurrents(){
 
 void Robot::RobotInit()
 {
+	autonomousChooser = NULL;
 	Logger *logger = Logger::GetInstance(true, true);
 	logger->SetLoggingLevel(Logger::kTRACE);
 	logger->SetLoggingMask(DefaultLoggingMask);
@@ -110,6 +114,14 @@ void Robot::RobotInit()
 	}
 
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: Exiting");
+
+	autonomousChooser.reset(new SendableChooser());
+		autonomousChooser->AddDefault("Do Nothing", new NothingAutoCommandGroup());
+		autonomousChooser->AddObject("Breach", new BreachAutoCommandGroup());
+		autonomousChooser->AddObject("Breach Low Bar", new BreachLowBarCommandGroup());
+		autonomousChooser->AddObject("Reach", new ReachAutoCommandGroup());
+
+		SmartDashboard::PutData("Autonomous Modes", autonomousChooser.get());
 }
 
 /**
@@ -139,6 +151,7 @@ void Robot::DisabledPeriodic()
  */
 void Robot::AutonomousInit()
 {
+	autonomousCommand.reset(static_cast<Command *>(autonomousChooser->GetSelected()));
 	/* std::string autoSelected = SmartDashboard::GetString("Auto Selector", "Default");
 	if(autoSelected == "My Auto") {
 		autonomousCommand.reset(new MyAutoCommand());
@@ -176,6 +189,7 @@ void Robot::TeleopPeriodic()
 	SmartDashboard::PutNumber("total current", pdp->GetTotalCurrent());
 	SmartDashboard::PutNumber("Photo Sensor value (Volts)", RobotMap::intakeSubsystemPhotoSensor->GetVoltage());
 	Scheduler::GetInstance()->Run();
+	SmartDashboard::PutBoolean("Toggle direction of drive subsystem",driveSubsystem->ToggleDriveDirection);
 }
 
 void Robot::TestPeriodic()

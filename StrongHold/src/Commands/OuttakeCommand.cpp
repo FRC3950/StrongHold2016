@@ -28,7 +28,7 @@ void OuttakeCommand::Execute()
 bool OuttakeCommand::IsFinished()
 {
 	Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kTRACE, "OuttakeCommand::IsFinished");
-	if (Robot::oi->getOuttakeTrigger()){
+	if (Robot::oi->getOuttakeTrigger() || !Robot::oi->getOuttakeButton()){
 		return true;
 	}
 	return false;
@@ -37,6 +37,8 @@ bool OuttakeCommand::IsFinished()
 // Called once after isFinished returns true
 void OuttakeCommand::End()
 {
+	Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Neutral);
+
 	Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kTRACE, "OuttakeCommand::End");
 }
 
@@ -44,5 +46,6 @@ void OuttakeCommand::End()
 // subsystems is scheduled to run
 void OuttakeCommand::Interrupted()
 {
+	Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Neutral);
 	Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kTRACE, "OuttakeCommand::Interrupted");
 }

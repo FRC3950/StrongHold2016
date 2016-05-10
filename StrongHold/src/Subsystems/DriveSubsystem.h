@@ -55,6 +55,7 @@ public:
 	void AvgNewMotorCurrents(const DriveMotorCurrents &currents);
 
 	bool twistMode = true;
+	bool ToggleDriveDirection = false;
 private:
 	void SyncDriveModeToHardware();
 	void OutputAvgMotorCurrent(DriveMotorCurrents::MotorId motorId) const;

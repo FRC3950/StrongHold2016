@@ -4,7 +4,7 @@
 
 
 namespace {
-	const double DEFAULT_RUN_TIME = 0.5;
+	const double DEFAULT_RUN_TIME = 1.0;
 }
 IntakeCommand::IntakeCommand()
 {
@@ -12,6 +12,7 @@ IntakeCommand::IntakeCommand()
 	// eg. Requires(chassis);
 	Requires(Robot::intakeSubsystem.get());
 	InitMembers();
+	isBallDetectedOnStart = false;
 }
 
 // Called just before this Command runs the first time
@@ -27,6 +28,9 @@ void IntakeCommand::Execute()
 		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::Execute->Setting Intake to In");
 
 		Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::In);
+		if (Robot::intakeSubsystem->IsBallLoaded()){
+			isBallDetectedOnStart = true;
+		}
 		currState = WaitBallLoaded;
 	}
 }
@@ -49,6 +53,15 @@ bool IntakeCommand::IsFinished()
 		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::IsFinished->currState = WaitTime");
 		return WaitTimeState();
 
+	case ReleseWait:
+		if (Robot::oi->getOuttakeTrigger()){
+			return false;
+		}
+		else {
+			currState = Done;
+			return true;
+		}
+
 	case Done:
 		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::IsFinished->currState = Done");
 		return true;
@@ -60,11 +73,15 @@ bool IntakeCommand::IsFinished()
 }
 
 bool IntakeCommand::WaitBallLoadedState() {
-	if (Robot::intakeSubsystem->IsBallLoaded()) {
+	if (Robot::intakeSubsystem->IsBallLoaded() && !isBallDetectedOnStart) {
 		Logger *logger = Logger::GetInstance();
 		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::WaitBallLoadedState->Ball is LOADED!");
 		startTime = Timer::GetFPGATimestamp();
 		currState = WaitTime;
+	}
+	if (!Robot::oi->getOuttakeTrigger()){
+		Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Neutral);
+		Cleanup();
 	}
 
 	return false;
@@ -81,13 +98,16 @@ bool IntakeCommand::WaitTimeState() {
 		return false;
 	}
 
-	timeWaited += (currTime - startTime);
+	timeWaited = (currTime - startTime);
 
 	if (timeWaited >= runTime) {
 		Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Neutral);
-		currState = Done;
+		currState = ReleseWait;
 		logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeCommand::WaitTimeState->WAIT TIME EXCEEDED! RETURNING true");
-		return true;
+	}
+	if (!Robot::oi->getOuttakeTrigger()){
+		Robot::intakeSubsystem->SetIntakeMotor(IntakeSubsystem::Neutral);
+		Cleanup();
 	}
 
 	return false;
@@ -110,6 +130,7 @@ void IntakeCommand::InitMembers() {
 	currState = Init;
 	timeWaited = 0.0;
 	runTime = DEFAULT_RUN_TIME;
+	isBallDetectedOnStart = false;
 }
 
 void IntakeCommand::Cleanup()

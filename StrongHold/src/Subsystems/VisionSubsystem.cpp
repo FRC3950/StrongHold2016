@@ -36,6 +36,10 @@ void VisionSubsystem::On()
     // acquire images
 	IMAQdxStartAcquisition(session);
 
+}
+
+void VisionSubsystem::GrabImage()
+{
 	acquireImaq = true;
 
     // grab an image, draw the circle, and provide it for the camera server which will
@@ -77,6 +81,7 @@ void VisionSubsystem::On()
 			//			                    const ParticleFilterOptions2* options, const ROI* roi,
 			//			                    int* numParticles);
 			//			imaqDrawShapeOnImage(frame, frame, { 10, 10, 100, 100 }, DrawMode::IMAQ_DRAW_VALUE, ShapeMode::IMAQ_SHAPE_OVAL, 0.0f);
+			imaqFlip(frame,frame,FlipAxis::IMAQ_HORIZONTAL_AXIS);
 			CameraServer::GetInstance()->SetImage(frame);
 		}
 		//Wait(0.005);				// wait for a motor update time

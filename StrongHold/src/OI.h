@@ -24,6 +24,8 @@ private:
 	std::shared_ptr<JoystickButton> OuttakeButton;
 	std::shared_ptr<JoystickButton> KillIntakeAndShootCommand;
 	std::shared_ptr<JoystickButton> ToggleTwistControlButton;
+	std::shared_ptr<JoystickButton> ToggleDriveDirectionButton;
+	std::shared_ptr<JoystickButton> dropClimberButton;
 	//possibly add shoot buttons for different distances or just base it off vision.
 
 public:
@@ -34,6 +36,10 @@ public:
 
 	float getManipulatorSpeed();
 	bool getOuttakeTrigger();
+
+	bool getLaunchClimberButton();
+	bool getOuttakeButton();
+	bool getDropClimberButton();
 };
 
 #endif

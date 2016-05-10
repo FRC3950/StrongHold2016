@@ -172,7 +172,10 @@ void DriveSubsystem::ArcadeDrive(float y, float twist) {
 		twist = 0.0;
 		y = 0.0;
 	}
-
+	if (ToggleDriveDirection) {
+		twist = -twist;
+		y = -y;
+	}
 	robotDrive->ArcadeDrive(twist,y);
 }
 

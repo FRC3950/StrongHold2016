@@ -15,6 +15,7 @@ public:
 	void Interrupted();
 private:
 	double holdPos;
+	bool stoped = false;
 	bool holdPosSet;
 	bool IsInRangeOfHoldPos();
 	double DirectionToMove();
