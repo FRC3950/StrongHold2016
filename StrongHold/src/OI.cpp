@@ -64,7 +64,7 @@ OI::OI() {
 	ToggleHoodButton->WhenPressed(new ToggleShooterHoodCommand());
 	//IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Intake));
 	//DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Down));
-	ReadyShootButton->WhenPressed(new DefultValueShootCommand());
+	ReadyShootButton->WhenPressed(new DashboardShootCommand());
 	//ShootButton->WhenPressed(new ShootCommandGroup());
 	ShiftGearButton->WhenPressed(new ToggleGearCommand());
 	PowerTakeOffButton->WhenPressed(new ClimbCommand());

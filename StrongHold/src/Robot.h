@@ -19,6 +19,7 @@
 #include "DriveMotorCurrents.h"
 #include "Subsystems/VisionSubsystem.h"
 #include "Subsystems/ManipulatorSubsystem.h"
+#include "Subsystems/HoodSubsystem.h"
 
 
 class Robot: public IterativeRobot {
@@ -34,6 +35,7 @@ public:
 	static std::shared_ptr<PowerDistributionPanel> pdp;
 	static std::shared_ptr<VisionSubsystem> visionSubsystem;
 	static std::shared_ptr<ManipulatorSubsystem> manipulatorSubsystem;
+	static std::shared_ptr<HoodSubsystem> hoodSubsystem;
 
 	static DriveMotorCurrents getDriveMotorCurrents();
 

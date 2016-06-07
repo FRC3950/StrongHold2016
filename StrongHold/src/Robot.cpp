@@ -22,6 +22,7 @@ std::shared_ptr<PowerDistributionPanel> Robot::pdp;
 std::unique_ptr<OI> Robot::oi;
 std::shared_ptr<VisionSubsystem> Robot::visionSubsystem;
 std::shared_ptr<ManipulatorSubsystem> Robot::manipulatorSubsystem;
+std::shared_ptr<HoodSubsystem> Robot::hoodSubsystem;
 
 
 namespace
@@ -87,6 +88,7 @@ void Robot::RobotInit()
 	shooterSubsystem.reset(new ShooterSubsystem());
 	manipulatorSubsystem.reset(new ManipulatorSubsystem());
 	visionSubsystem.reset(new VisionSubsystem());
+	hoodSubsystem.reset(new HoodSubsystem());
 
 	logger->Log(RobotLogId, Logger::kTRACE, "RobotInit:: After Shooter Subsystem create");
 
@@ -149,8 +151,7 @@ void Robot::DisabledPeriodic()
  * You can add additional auto modes by adding additional commands to the chooser code above (like the commented example)
  * or additional comparisons to the if-else structure below with additional strings & commands.
  */
-void Robot::AutonomousInit()
-{
+void Robot::AutonomousInit(){
 	autonomousCommand.reset(static_cast<Command *>(autonomousChooser->GetSelected()));
 	/* std::string autoSelected = SmartDashboard::GetString("Auto Selector", "Default");
 	if(autoSelected == "My Auto") {

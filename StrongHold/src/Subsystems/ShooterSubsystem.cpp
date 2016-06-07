@@ -77,7 +77,6 @@ const float ShooterSubsystem::MaxRotationsPerSec = 500.0f;
 ShooterSubsystem::ShooterSubsystem() :
 		Subsystem("ShooterSubsystem")
 {
-	hoodSolenoid = RobotMap::shooterSubsystemShooterCoverSolenoid;
 	shooterMotor = RobotMap::shooterSubsystemShooterWheelTalon;
 
 	shooterMotor->SetControlMode(CANTalon::kPercentVbus);
@@ -91,6 +90,13 @@ ShooterSubsystem::ShooterSubsystem() :
 	lastCountsReadTime = 0.0f;
 	lastCounts = 0.0f;
 
+	//not originally being set to 0
+	//but the pre-compiler showed a warning
+	// so I set them to 0 here.    -Joey
+	currSpeed = 0.0f;
+	startShooterSpinupTime = 0.0f;
+	startSeekTime = 0.0f;
+
 	InitSubsystemConfiguration();
 }
 
@@ -102,28 +108,6 @@ void ShooterSubsystem::InitDefaultCommand()
 
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
-void ShooterSubsystem::SetHoodState(HoodState hs){
-	if (hs == HoodState::open){
-		hoodSolenoid.get()->Set(true);
-	}
-	else if (hs == HoodState::closed){
-		hoodSolenoid.get()->Set(false);
-	}
-
-}
-void ShooterSubsystem::ToggleHood(){
-	if (hoodSolenoid->Get() == true){
-		hoodSolenoid->Set(false);
-	}
-	else {
-		hoodSolenoid->Set(true);
-	}
-}
-
-ShooterSubsystem::HoodState ShooterSubsystem::GetHoodState(){
-	return hoodSolenoid->Get() == true ? HoodState::open : HoodState::closed;
-}
-
 
 void ShooterSubsystem::SetTargetSpeed(float rotsPerSec){
 	Logger *logger = Logger::GetInstance();
