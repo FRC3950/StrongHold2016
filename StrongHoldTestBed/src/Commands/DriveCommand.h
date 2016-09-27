@@ -5,6 +5,8 @@
 #include "WPILib.h"
 
 class DriveCommand: public CommandBase {
+private:
+
 public:
 	DriveCommand();
 	void Initialize();

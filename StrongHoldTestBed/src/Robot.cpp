@@ -7,6 +7,7 @@
 #include "Subsystems/DriveSubsystem.h"
 
 std::shared_ptr<DriveSubsystem> Robot::driveSubsystem;
+std::shared_ptr<IntakeSubsystem> Robot::intakeSubsystem;
 std::unique_ptr<OI> Robot::oi;
 
 namespace
@@ -35,9 +36,10 @@ void Robot::RobotInit()
 	}
 
 	ahrs = RobotMap::ahrs;
-
+	photoSensor = RobotMap::photoSensor;
 	CommandBase::init();
 	driveSubsystem.reset(new DriveSubsystem());
+	intakeSubsystem.reset(new IntakeSubsystem());
 
 	// This MUST be here. If the OI creates Commands (which it very likely
 	// will), constructing it during the construction of CommandBase (from
@@ -188,6 +190,8 @@ void Robot::OutputNavxData()
 	SmartDashboard::PutNumber(  "QuaternionX",          ahrs->GetQuaternionX());
 	SmartDashboard::PutNumber(  "QuaternionY",          ahrs->GetQuaternionY());
 	SmartDashboard::PutNumber(  "QuaternionZ",          ahrs->GetQuaternionZ());
+	SmartDashboard::PutNumber("photo sensor value", (double)photoSensor->GetValue());
+	SmartDashboard::PutNumber("photo sensor voltage", photoSensor->GetVoltage());
 }
 
 START_ROBOT_CLASS(Robot)

@@ -14,13 +14,15 @@ private:
 	std::shared_ptr<Talon> talon2;
 	std::shared_ptr<Talon> talon3;
 	std::shared_ptr<Talon> talon4;
-	std::shared_ptr<RobotDrive> robotDrive41;
+	std::shared_ptr<RobotDrive> robotDrive;
+	std::shared_ptr<DoubleSolenoid> powerTakeOffSolenoid;
 
 public:
 	DriveSubsystem();
 	void InitDefaultCommand();
 	void EnableDriveSubsystem();
 	void ArcadeDrive(float y,float twist);
+	void TogglePowerTakeOff();
 };
 
 #endif

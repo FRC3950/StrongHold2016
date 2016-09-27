@@ -9,6 +9,7 @@ std::unique_ptr<OI> CommandBase::oi;
 CommandBase::CommandBase(const std::string &name) :
 		Command(name)
 {
+	oi.reset(new OI());
 }
 
 CommandBase::CommandBase() :

@@ -13,6 +13,7 @@
 #include "OI.h"
 #include "AHRS.h"
 #include "Subsystems/DriveSubsystem.h"
+#include "Subsystems/IntakeSubsystem.h"
 
 class Robot: public IterativeRobot {
 public:
@@ -21,6 +22,7 @@ public:
 	LiveWindow *lw = LiveWindow::GetInstance();
 
 	static std::shared_ptr<DriveSubsystem> driveSubsystem;
+	static std::shared_ptr<IntakeSubsystem> intakeSubsystem;
 
 	virtual void RobotInit();
 	virtual void DisabledInit();
@@ -36,6 +38,7 @@ private:
 
 	std::unique_ptr<SendableChooser> chooser;
 	std::shared_ptr<AHRS> ahrs;
+	std::shared_ptr<AnalogInput> photoSensor;
 };
 
 #endif /* SRC_ROBOT_H_ */

@@ -20,15 +20,17 @@ DriveSubsystem::DriveSubsystem() :
     talon2 = RobotMap::driveSubsystemTalon2;
     talon3 = RobotMap::driveSubsystemTalon3;
     talon4 = RobotMap::driveSubsystemTalon4;
-    robotDrive41 = RobotMap::driveSubsystemRobotDrive41;
+    robotDrive = RobotMap::driveSubsystemRobotDrive41;
 
-    robotDrive41->SetSafetyEnabled(true);
-    robotDrive41->SetExpiration(0.1);
-    robotDrive41->SetSensitivity(0.5);
-    robotDrive41->SetMaxOutput(1.0);
+    powerTakeOffSolenoid = RobotMap::testSolenoid;
 
-    robotDrive41->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
-    robotDrive41->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
+    robotDrive->SetSafetyEnabled(true);
+    robotDrive->SetExpiration(0.1);
+    robotDrive->SetSensitivity(0.5);
+    robotDrive->SetMaxOutput(1.0);
+
+    robotDrive->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
+    robotDrive->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
 }
 
 void DriveSubsystem::InitDefaultCommand()
@@ -50,11 +52,11 @@ void DriveSubsystem::EnableDriveSubsystem(){
 	SetSafetyMode(*talon2, enable, expiration);
 	SetSafetyMode(*talon3, enable, expiration);
 	SetSafetyMode(*talon4, enable, expiration);
-	robotDrive41->SetSafetyEnabled(enable);
+	robotDrive->SetSafetyEnabled(enable);
 
 	if (enable)
 	{
-		robotDrive41->SetSafetyEnabled(expiration);
+		robotDrive->SetSafetyEnabled(expiration);
 	}
 
 	/*
@@ -73,5 +75,15 @@ void DriveSubsystem::EnableDriveSubsystem(){
 void DriveSubsystem::ArcadeDrive(float y, float twist) {
 	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveSubsystem::ArcadeDrive()->y = %f, twist=%f", y, twist);
 
-	robotDrive41->ArcadeDrive(twist,y);
+	robotDrive->ArcadeDrive(twist,y);
+}
+void DriveSubsystem::TogglePowerTakeOff(){
+	if (powerTakeOffSolenoid->Get() == DoubleSolenoid::Value::kForward){
+		powerTakeOffSolenoid->Set(DoubleSolenoid::Value::kReverse);
+	}
+	else {
+		powerTakeOffSolenoid->Set(DoubleSolenoid::Value::kForward);
+	}
+
+
 }

@@ -30,9 +30,17 @@ public:
 	static std::shared_ptr<Talon> driveSubsystemTalon2;
 	static std::shared_ptr<Talon> driveSubsystemTalon3;
 	static std::shared_ptr<Talon> driveSubsystemTalon4;
+	static std::shared_ptr<Victor> intakeSubsystemIntakeMotor;
+	static std::shared_ptr<CANTalon> intakeManipulatorIntakeMotor;
 	static std::shared_ptr<RobotDrive> driveSubsystemRobotDrive41;
 
+	static std::shared_ptr<DoubleSolenoid> testSolenoid;
+
 	static std::shared_ptr<AHRS> ahrs;
+
+	static std::shared_ptr<AnalogInput> photoSensor;
+
+	static std::shared_ptr<DigitalInput> intakeSubsystemUperLimitSwitch;
 
 	static void init();
 };

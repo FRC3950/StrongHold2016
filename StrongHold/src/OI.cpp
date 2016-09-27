@@ -37,7 +37,7 @@ OI::OI() {
 	//HomePosButton.reset(new JoystickButton(xBoxControler.get(),2));
 	//IntakePosButton.reset(new JoystickButton(xBoxControler.get(),4));
 	//DownPosButton.reset(new JoystickButton(xBoxControler.get(),3));
-	ReadyShootButton.reset(new JoystickButton(xBoxControler.get(),1));
+	//ReadyShootButton.reset(new JoystickButton(xBoxControler.get(),1));
 	//ShootButton.reset(new JoystickButton(xBoxControler.get(),6));
 	//IntakeButton.reset(new JoystickButton(xBoxControler.get(),5));
 	//StopIntakeButton.reset(new JoystickButton(xBoxControler.get(),2));
@@ -64,7 +64,7 @@ OI::OI() {
 	ToggleHoodButton->WhenPressed(new ToggleShooterHoodCommand());
 	//IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Intake));
 	//DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Down));
-	ReadyShootButton->WhenPressed(new DashboardShootCommand());
+	//ReadyShootButton->WhenPressed(new DashboardShootCommand());
 	//ShootButton->WhenPressed(new ShootCommandGroup());
 	ShiftGearButton->WhenPressed(new ToggleGearCommand());
 	PowerTakeOffButton->WhenPressed(new ClimbCommand());
