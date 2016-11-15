@@ -6,7 +6,6 @@ LaunchClimberCommand::LaunchClimberCommand()
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(chassis);
 	Requires(Robot::climberSubsystem.get());
-	init = false;
 }
 
 // Called just before this Command runs the first time
@@ -18,16 +17,13 @@ void LaunchClimberCommand::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void LaunchClimberCommand::Execute()
 {
-	if (!init){
-		init = true;
 		Robot::climberSubsystem->LaunchClimber();
 	}
-}
 
 // Make this return true when this Command no longer needs to run execute()
 bool LaunchClimberCommand::IsFinished()
 {
-	return Robot::climberSubsystem->inClimbState();
+	return false;
 }
 
 // Called once after isFinished returns true

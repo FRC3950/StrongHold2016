@@ -8,6 +8,7 @@ private:
 	std::shared_ptr<Joystick> joystick;
 	std::shared_ptr<Joystick> xBoxControler;
 	std::shared_ptr<JoystickButton> LaunchClimberButton;
+	std::shared_ptr<JoystickButton> RetractClimberButton;
 	std::shared_ptr<JoystickButton> ToggleHoodButton;
 	std::shared_ptr<JoystickButton> HomePosButton;   //may condense these three buttons later
 	std::shared_ptr<JoystickButton> IntakePosButton; //
@@ -23,6 +24,7 @@ private:
 	std::shared_ptr<JoystickButton> StopIntakeButton;
 	std::shared_ptr<JoystickButton> OuttakeButton;
 	std::shared_ptr<JoystickButton> KillIntakeAndShootCommand;
+	std::shared_ptr<JoystickButton> IntakeShootButton;
 	//possibly add shoot buttons for different distances or just base it off vision.
 
 public:

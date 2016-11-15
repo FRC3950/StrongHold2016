@@ -4,6 +4,7 @@
 #include "../ConfigKeys.h"
 #include "../Config/ConfigInstanceMgr.h"
 #include "../Commands/IntakeCommand.h"
+#include "../Commands/StopIntakeCommand.h"
 #include <math.h>
 
 namespace {
@@ -20,12 +21,13 @@ IntakeSubsystem::IntakeSubsystem() :
 {
 	intakeMotor = RobotMap::intakeSubsystemRollerVictor;
 	photoSensor = RobotMap::intakeSubsystemPhotoSensor;
+	rampLimitSwitch = RobotMap::intakeSubsystemRampLimitSwitch;
 }
 
 void IntakeSubsystem::InitDefaultCommand()
 {
 	// Set the default command for a subsystem here.
-	SetDefaultCommand(new IntakeCommand());
+	SetDefaultCommand(new StopIntakeCommand());
 }
 
 // Put methods for controlling this subsystem
@@ -55,14 +57,13 @@ void IntakeSubsystem::SetIntakeMotor(IntakeDirection id) {
 bool IntakeSubsystem::IsBallLoaded() {
 	SmartDashboard::PutNumber("Photo Sensor target value (Volts)", PhotoSensorTargetVoltage);
 
-	Logger *logger = Logger::GetInstance();
+	//Logger *logger = Logger::GetInstance();
 
-	float sensorVoltage = photoSensor->GetVoltage();
+	//float sensorVoltage = photoSensor->GetVoltage();
 
-	logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeSubsystem::IsBallLoaded ->Sensor is %f, Threshold = %f",
-				sensorVoltage, PhotoSensorTargetVoltage);
+	//logger->Log(IntakeSubsystemLogId, Logger::kTRACE, "IntakeSubsystem::IsBallLoaded ->Sensor is %f, Threshold = %f",sensorVoltage, PhotoSensorTargetVoltage);
 
-	if (sensorVoltage > PhotoSensorTargetVoltage){
+	if (!rampLimitSwitch->Get()){
 		return true;
 	}
 	return false;

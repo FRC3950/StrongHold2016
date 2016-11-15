@@ -4,7 +4,7 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.exe.debug.1104744751">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.exe.debug.1104744751" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<macros>
-					<stringMacro name="HOME" type="VALUE_TEXT" value="C:\Users\RoboGym"/>
+					<stringMacro name="HOME" type="VALUE_TEXT" value="C:\Users\nshsrobotics"/>
 				</macros>
 				<externalSettings>
 					<externalSetting>

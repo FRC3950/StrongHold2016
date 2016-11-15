@@ -15,6 +15,9 @@
 #include "Commands/OuttakeCommand.h"
 #include "Commands/StopIntakeCommand.h"
 #include "Commands/StopShootAndIntakeCommandGroup.h"
+#include "Commands/IntakeCommandV2.h"
+#include "Commands/OverrideIntakeCommand.h"
+#include "Commands/RetractClimberCommand.h"
 
 OI::OI() {
 	// Process operator interface input here.
@@ -29,16 +32,18 @@ OI::OI() {
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Created Joysticks");
 
 	LaunchClimberButton.reset(new JoystickButton(xBoxControler.get(),8));
+	RetractClimberButton.reset(new JoystickButton(xBoxControler.get(),7));
 	ToggleHoodButton.reset(new JoystickButton(xBoxControler.get(),6));
 	//HomePosButton.reset(new JoystickButton(xBoxControler.get(),2));
-	IntakePosButton.reset(new JoystickButton(xBoxControler.get(),4));
-	DownPosButton.reset(new JoystickButton(xBoxControler.get(),3));
-	ReadyShootButton.reset(new JoystickButton(xBoxControler.get(),1));
-	//ShootButton.reset(new JoystickButton(xBoxControler.get(),6));
-	//IntakeButton.reset(new JoystickButton(xBoxControler.get(),5));
-	//StopIntakeButton.reset(new JoystickButton(xBoxControler.get(),2));
+	//IntakePosButton.reset(new JoystickButton(xBoxControler.get(),4));
+	//DownPosButton.reset(new JoystickButton(xBoxControler.get(),3));
+	//ReadyShootButton.reset(new JoystickButton(xBoxControler.get(),4));
+	IntakeShootButton.reset(new JoystickButton(xBoxControler.get(),1));
+	ShootButton.reset(new JoystickButton(xBoxControler.get(),4));
+	IntakeButton.reset(new JoystickButton(xBoxControler.get(),3));
+	StopIntakeButton.reset(new JoystickButton(xBoxControler.get(),7));
 	OuttakeButton.reset(new JoystickButton(xBoxControler.get(),5));
-	ShiftGearButton.reset(new JoystickButton(joystick.get(),4));
+	ShiftGearButton.reset(new JoystickButton(joystick.get(),1));
 	PowerTakeOffButton.reset(new JoystickButton(joystick.get(),11));
 	ResetToDriveButton.reset(new JoystickButton(joystick.get(),12));
 	VisionOnButton.reset(new JoystickButton(joystick.get(),7));
@@ -53,17 +58,19 @@ OI::OI() {
 	logger->Log(OILogId, Logger::kTRACE, "OI::ctor Intake Command assigned.");
 
 #if 1
-	//LaunchClimberButton->WhenPressed(new LaunchClimberCommand());
+	LaunchClimberButton->WhileHeld(new LaunchClimberCommand());
+	RetractClimberButton->WhileHeld(new RetractClimberCommand());
 	ToggleHoodButton->WhenPressed(new ToggleShooterHoodCommand());
-	IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Intake));
-	DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Down));
-	ReadyShootButton->WhenPressed(new DashboardShootCommand());
-	//ShootButton->WhenPressed(new ShootCommandGroup());
+	//IntakePosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Intake));
+	//DownPosButton->WhenPressed(new ManipulatorSeekPosCommand(ManipulatorSubsystem::SeekManipulatorPos::Down));
+	//ReadyShootButton->WhenPressed(new DashboardShootCommand());
+	IntakeShootButton->WhileHeld(new OverrideIntakeCommand());
+	ShootButton->WhenPressed(new DashboardShootCommand());
 	ShiftGearButton->WhenPressed(new ToggleGearCommand());
 	PowerTakeOffButton->WhenPressed(new ClimbCommand());
 	ResetToDriveButton->WhenPressed(new DriveSubsystemInteruptCommand());
-//	IntakeButton->WhenPressed(new IntakeCommand());
-//	StopIntakeButton->WhenPressed(new StopIntakeCommand());
+	IntakeButton->WhileHeld(new IntakeCommandV2());
+	StopIntakeButton->WhenPressed(new StopIntakeCommand());
 	OuttakeButton->WhileHeld(new OuttakeCommand());
 	VisionOnButton->WhenPressed(new VisionOnCommand());
 	VisionOffButton->WhenPressed(new VisionOffCommand());

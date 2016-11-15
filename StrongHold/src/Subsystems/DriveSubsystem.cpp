@@ -255,7 +255,7 @@ void DriveSubsystem::ResetAvgMotorCurrents() {
 	overloadCondition = false;
 }
 
-DriveSubsystem::SafetyCurrentAction DriveSubsystem::CheckAvgMotorCurrent(DriveMotorCurrents::MotorId motorId) {
+/* DriveSubsystem::SafetyCurrentAction DriveSubsystem::CheckAvgMotorCurrent(DriveMotorCurrents::MotorId motorId) {
 	if ((avgMotorCurrents[motorId] >= TripSafetyActionCurrentAvg) &&
 		(aboveAvgCurrentThresholdEpochCounts[motorId] >= AboveAvgCurrConsecEpochThreshold))	{
 		if (InDriveMode()) {
@@ -273,7 +273,7 @@ DriveSubsystem::SafetyCurrentAction DriveSubsystem::CheckAvgMotorCurrent(DriveMo
 	}
 
 	return NoAction;
-}
+} */
 
 namespace {
 	const std::string* AvgSmartDashBoardKeys[] = {
@@ -301,7 +301,7 @@ void DriveSubsystem::AvgNewMotorCurrents(const DriveMotorCurrents &currents)
 	SafetyCurrentAction pendingAction = NoAction;
 	int motorsBelowAvgCurrentCount = 0;
 
-	if (timeStep++ > 0)
+	/*if (timeStep++ > 0)
 	{
 		for (unsigned int currMotorId = DriveMotorCurrents::firstMotor; currMotorId <= DriveMotorCurrents::lastMotor; ++currMotorId)
 		{
@@ -345,9 +345,9 @@ void DriveSubsystem::AvgNewMotorCurrents(const DriveMotorCurrents &currents)
 			aboveAvgCurrentThresholdEpochCounts[currMotorId] = 0;
 			OutputAvgMotorCurrent(static_cast<DriveMotorCurrents::MotorId>(currMotorId));
 		}
-	}
+	} */
 
-	switch (pendingAction) {
+	/* switch (pendingAction) {
 	case NoAction:
 	default:
 		if (overloadCondition && (motorsBelowAvgCurrentCount >= DriveMotorCurrents::numMotors)) {
@@ -363,7 +363,7 @@ void DriveSubsystem::AvgNewMotorCurrents(const DriveMotorCurrents &currents)
 		robotDrive->ArcadeDrive(0.0, 0.0);
 		overloadCondition = true;
 		break;
-	}
+	} */
 }
 
 

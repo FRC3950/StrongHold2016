@@ -38,6 +38,7 @@ public:
 	static std::shared_ptr<CANTalon> intakeSubsystemManipulatorMotor;
 	static std::shared_ptr<AnalogInput> intakeSubsystemPhotoSensor;
 	static std::shared_ptr<DigitalInput> intakeSubsystemUpperLimitSwitch;
+	static std::shared_ptr<DigitalInput> intakeSubsystemRampLimitSwitch;
 	static std::shared_ptr<CANTalon> shooterSubsystemShooterWheelTalon;
 	static std::shared_ptr<Solenoid> shooterSubsystemShooterCoverSolenoid;
 

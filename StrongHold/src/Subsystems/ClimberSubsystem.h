@@ -17,6 +17,7 @@ public:
 	void LaunchClimber();
 	void stopClimber();
 	bool inClimbState();
+	void RetractClimber();
 };
 
 #endif

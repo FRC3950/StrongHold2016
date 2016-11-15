@@ -14,7 +14,7 @@ IntakeCommand::IntakeCommand()
 	InitMembers();
 }
 
-// Called just before this Command runs the first time
+// Called just before this Command runs the first time hahah BRYCE ALex Has hacked the code watch out IM a code master
 void IntakeCommand::Initialize()
 {
 }

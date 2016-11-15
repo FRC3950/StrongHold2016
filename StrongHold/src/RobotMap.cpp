@@ -23,6 +23,7 @@ std::shared_ptr<AnalogInput> RobotMap::intakeSubsystemPhotoSensor;
 std::shared_ptr<CANTalon> RobotMap::shooterSubsystemShooterWheelTalon;
 std::shared_ptr<CANTalon> RobotMap::uptakeSubsystemIndexerTalon;
 std::shared_ptr<Solenoid> RobotMap::shooterSubsystemShooterCoverSolenoid;
+std::shared_ptr<DigitalInput> RobotMap::intakeSubsystemRampLimitSwitch;
 //std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid1;
 //std::shared_ptr<Solenoid> RobotMap::climberSubsystemSolenoid2;
 std::shared_ptr<Talon> RobotMap::climberSubsystemMotor;
@@ -55,6 +56,8 @@ void RobotMap::init(){
 
 
     intakeSubsystemRollerVictor.reset(new Talon(5));
+
+    intakeSubsystemRampLimitSwitch.reset(new DigitalInput(1));
 
     intakeSubsystemManipulatorMotor.reset(new CANTalon(1));
 

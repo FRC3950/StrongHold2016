@@ -31,6 +31,7 @@ private:
 	// for methods that implement subsystem capabilities
 	std::shared_ptr<Talon> intakeMotor;
 	std::shared_ptr<AnalogInput> photoSensor;
+	std::shared_ptr<DigitalInput> rampLimitSwitch;
 };
 
 #endif
